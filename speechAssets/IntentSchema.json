@@ -1,0 +1,108 @@
+{
+  "intents": [
+    {
+      "intent": "AddExpenseIntent",
+      "slots": [
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        },
+
+        {
+          "name": "category",
+          "type": "LIST_OF_CATEGORIES"
+        },
+        
+        {
+          "name": "amount",
+          "type": "AMAZON.NUMBER"
+        },
+      ]
+    },
+    {
+      "intent": "GiveSpendingHabitsIntent",
+      "slots": [
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        },
+
+        {
+          "name": "category",
+          "type": "LIST_OF_CATEGORIES"
+        },
+        
+        {
+          "name": "amount",
+          "type": "AMAZON.NUMBER"
+        },
+
+        {
+          "name": "habit",
+          "type": "LIST_OF_HABITS"
+        }
+      ]
+
+    },
+    {
+      "intent": "CancelExpenditureIntent",
+      "slots": [
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        },
+
+        {
+          "name": "category",
+          "type": "LIST_OF_CATEGORIES"
+        },
+        
+        {
+          "name": "amount",
+          "type": "AMAZON.NUMBER"
+        }
+
+      ]
+
+    },
+    {
+      "intent": "SetBudgetIntent",
+      "slots": [
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        },
+
+        {
+          "name": "category",
+          "type": "LIST_OF_CATEGORIES"
+        },
+        
+        {
+          "name": "amount",
+          "type": "AMAZON.NUMBER"
+        }
+
+      ]
+
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}

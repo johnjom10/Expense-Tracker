@@ -1,0 +1,141 @@
+AddExpenseIntent spent {amount} dollars on {category} on {date}
+AddExpenseIntent spent {amount} dollars on {category}
+AddExpenseIntent spent {amount} dollars on {date}
+AddExpenseIntent spent {amount} dollars
+AddExpenseIntent bought {category} for {amount} dollars on {date}
+AddExpenseIntent bought {category} for {amount} dollars
+AddExpenseIntent bought {category} worth {amount} dollars on {date}
+AddExpenseIntent bought {category} worth {amount} dollars
+AddExpenseIntent paid {amount} dollars for {category} on {date}
+AddExpenseIntent paid {amount} dollars for {category}
+AddExpenseIntent lent {amount} dollars to {category} on {date}
+AddExpenseIntent lent {amount} dollars to {category} 
+AddExpenseIntent gave {amount} dollars for {category} on {date}
+AddExpenseIntent gave {amount} dollars for {category}
+AddExpenseIntent gave {amount} dollars to {category} on {date}
+AddExpenseIntent gave {amount} dollars to {category} 
+AddExpenseIntent transferred {amount} dollars for {category} on {date}
+AddExpenseIntent transferred {amount} dollars for {category}
+AddExpenseIntent transferred {amount} dollars to {category} on {date}
+AddExpenseIntent transferred {amount} dollars to {category} 
+AddExpenseIntent debited {amount} dollars for {category} on {date}
+AddExpenseIntent debited {amount} dollars for {category}
+AddExpenseIntent debited {amount} dollars to {category} on {date}
+AddExpenseIntent debited {amount} dollars to {category} 
+AddExpenseIntent invested {amount} dollars in {category} on {date}
+AddExpenseIntent invested {amount} dollars in {category}
+AddExpenseIntent invested {amount} dollars
+AddExpenseIntent bill towards {category} for {amount} dollars on {date}
+AddExpenseIntent bill towards {category} for {amount} dollars
+AddExpenseIntent {category} payment for {amount} dollars on {date}
+AddExpenseIntent {category} payment for {amount} dollars
+AddExpenseIntent lost {amount} dollars in {category} on {date}
+AddExpenseIntent lost {amount} dollars on {date}
+AddExpenseIntent lost {amount} dollars in {category} 
+AddExpenseIntent donated {amount} towards {category} on {date}
+AddExpenseIntent donated {amount} towards {category}
+AddExpenseIntent donated {amount}
+AddExpenseIntent {category} for {amount} dollars on {date}
+AddExpenseIntent {category} worth {amount} dollars on {date}
+AddExpenseIntent {amount} dollars {category} {date}
+AddExpenseIntent {category} {amount} dollars {date} 
+AddExpenseIntent {amount} dollars {category} 
+AddExpenseIntent {category} {amount} dollars 
+AddExpenseIntent {amount} dollars
+
+CancelExpenditureIntent deduct {amount} dollars from {category} on {date}
+CancelExpenditureIntent deduct {amount} from {category}
+CancelExpenditureIntent deduct {amount} on {date}
+CancelExpenditureIntent deduct {amount}
+CancelExpenditureIntent cancel entry for {amount} dollars from {category} on {date}
+CancelExpenditureIntent cancel entry for {amount} from {category}
+CancelExpenditureIntent cancel entry for {amount} on {date}
+CancelExpenditureIntent cancel entry for {amount}
+CancelExpenditureIntent remove entry for {amount} dollars from {category} on {date}
+CancelExpenditureIntent remove entry for {amount} from {category}
+CancelExpenditureIntent remove entry for {amount} on {date}
+CancelExpenditureIntent remove entry for {amount}
+CancelExpenditureIntent remove last entry
+CancelExpenditureIntent cancel last entry 
+CancelExpenditureIntent delete entry for {amount} dollars from {category} on {date}
+CancelExpenditureIntent delete entry for {amount} from {category}
+CancelExpenditureIntent delete entry for {amount} on {date}
+CancelExpenditureIntent delete entry for {amount}
+CancelExpenditureIntent strike that
+CancelExpenditureIntent remove that
+CancelExpenditureIntent cancel that
+CancelExpenditureIntent delete that
+CancelExpenditureIntent scratch that
+CancelExpenditureIntent erase that
+CancelExpenditureIntent undo
+
+SetBudgetIntent set budget for {category} as {amount} dollars
+SetBudgetIntent set limit for {category} as {amount} dollars
+SetBudgetIntent set maximum limit for {category} as {amount} dollars
+SetBudgetIntent set maximum amount {category} as {amount} dollars
+SetBudgetIntent set budget for {category} as {amount} dollars for {date}
+SetBudgetIntent set limit for {category} as {amount} dollars for {date}
+SetBudgetIntent set maximum limit for {category} as {amount} dollars for {date}
+SetBudgetIntent set maximum amount {category} as {amount} dollars for {date}
+SetBudgetIntent set budget as {amount} dollars
+SetBudgetIntent set limit as {amount} dollars
+SetBudgetIntent set maximum limit as {amount} dollars
+SetBudgetIntent set maximum amount as {amount} dollars
+SetBudgetIntent set budget for {date} as {amount} dollars 
+SetBudgetIntent set budget as {amount} dollars 
+SetBudgetIntent set limit for {category} as {amount} dollars for {date}
+SetBudgetIntent set maximum limit as {amount} dollars for {date}
+SetBudgetIntent set maximum amount as {amount} dollars for {date}
+SetBudgetIntent set maximum limit as {amount} dollars 
+SetBudgetIntent set maximum amount as {amount} dollars 
+SetBudgetIntent i won`t spend more than {amount} dollars for {category} 
+SetBudgetIntent i will not spend more than {amount} dollars for {category}
+SetBudgetIntent i shall not spend more than {amount} dollars for {category}  
+SetBudgetIntent i cannot spend more than {amount} dollars for {category} this {date}
+SetBudgetIntent i am planning to spend {amount} dollars for {category}  
+SetBudgetIntent set maximum limit for {date} as {amount} dollars
+SetBudgetIntent set maximum amount for {date} as {amount} dollars
+SetBudgetIntent i won`t spend more than {amount} dollars 
+SetBudgetIntent my maximum expenditure will be {amount} dollars for {category} for{date}
+SetBudgetIntent my maximum expenditure will be {amount} dollars for {category} 
+SetBudgetIntent set maximum amount as {amount} dollars for {date}
+
+GiveSpendingHabitsIntent how much did i spend on {category} this {date}
+GiveSpendingHabitsIntent how much did i spend on {category} {date}
+GiveSpendingHabitsIntent how much did i spend this {date}
+GiveSpendingHabitsIntent how much did i spend {date}
+GiveSpendingHabitsIntent for what did i spend {habit}
+GiveSpendingHabitsIntent what did i spend {habit} on
+GiveSpendingHabitsIntent did i {habit} on {category}
+GiveSpendingHabitsIntent did i {habit} for {category}
+GiveSpendingHabitsIntent did i {habit} 
+GiveSpendingHabitsIntent where did i {habit}
+GiveSpendingHabitsIntent for what did i spend {habit} {amount} dollars
+GiveSpendingHabitsIntent where did i spend {habit} {amount} dollars
+GiveSpendingHabitsIntent how much did i spend on {category} {date}
+GiveSpendingHabitsIntent how much did i spend on {date}
+
+AMAZON.HelpIntent i am confused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
