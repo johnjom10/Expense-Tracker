@@ -16,7 +16,7 @@
         {
           "name": "amount",
           "type": "AMAZON.NUMBER"
-        },
+        }
       ]
     },
     {
@@ -42,6 +42,10 @@
           "type": "LIST_OF_HABITS"
         }
       ]
+
+    },
+    {
+      "intent": "CancelExpenditureImmediate"
 
     },
     {
