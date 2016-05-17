@@ -1,6 +1,9 @@
 {
   "intents": [
     {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
       "intent": "AddExpenseIntent",
       "slots": [
         {
@@ -35,18 +38,76 @@
         {
           "name": "amount",
           "type": "AMAZON.NUMBER"
-        },
-
-        {
-          "name": "habit",
-          "type": "LIST_OF_HABITS"
         }
+
       ]
 
     },
     {
-      "intent": "CancelExpenditureImmediate"
-
+      "intent": "MostSpendingsIntent",
+      "slots": [
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        }
+       ]
+    },
+    {
+      "intent": "MostSpendingsMonth",
+      "slots": [
+        {
+          "name": "category",
+          "type": "LIST_OF_CATEGORIES"
+        }
+       ]
+    },
+    {
+      "intent": "LeastSpendingsIntent",
+      "slots": [
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        }
+       ]
+    },
+    {
+      "intent": "LeastSpendingsMonth",
+      "slots": [
+        {
+          "name": "category",
+          "type": "LIST_OF_CATEGORIES"
+        }
+       ]
+    },
+    {
+      "intent": "OverspendIntent"
+    },
+    {
+      "intent": "OverspendMonth",
+      "slots": [
+        {
+          "name": "category",
+          "type": "LIST_OF_CATEGORIES"
+        }
+       ]
+    },
+    {
+      "intent": "OverspendCategory",
+      "slots": [
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        }
+       ]
+    },
+    {
+      "intent": "CancelExpenditureImmediate",
+      "slots": [
+        {
+          "name": "command",
+          "type": "COMMANDS"
+        }
+       ]
     },
     {
       "intent": "CancelExpenditureIntent",
@@ -98,9 +159,6 @@
     },
     {
       "intent": "AMAZON.NoIntent"
-    },
-    {
-      "intent": "AMAZON.HelpIntent"
     },
     {
       "intent": "AMAZON.StopIntent"

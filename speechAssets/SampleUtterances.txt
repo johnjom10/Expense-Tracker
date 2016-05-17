@@ -80,15 +80,7 @@ CancelExpenditureIntent delete entry for {amount} dollars on {date}
 CancelExpenditureIntent delete entry for {amount} dollars
 CancelExpenditureIntent delete
 
-CancelExpenditureImmediate	remove last entry
-CancelExpenditureImmediate	cancel last entry 
-CancelExpenditureImmediate	strike that
-CancelExpenditureImmediate	remove that
-CancelExpenditureImmediate	cancel that
-CancelExpenditureImmediate	delete that
-CancelExpenditureImmediate	scratch that
-CancelExpenditureImmediate	erase that
-CancelExpenditureImmediate	undo
+CancelExpenditureImmediate	{command}
 
 SetBudgetIntent set budget for {category} as {amount} dollars
 SetBudgetIntent set limit for {category} as {amount} dollars
@@ -133,10 +125,30 @@ GiveSpendingHabitsIntent did i {habit} on {category}
 GiveSpendingHabitsIntent did i {habit} for {category}
 GiveSpendingHabitsIntent did i {habit} 
 GiveSpendingHabitsIntent where did i {habit}
-GiveSpendingHabitsIntent for what did i spend {habit} {amount} dollars
-GiveSpendingHabitsIntent where did i spend {habit} {amount} dollars
 GiveSpendingHabitsIntent how much did i spend on {category} {date}
 GiveSpendingHabitsIntent how much did i spend on {date}
+
+MostSpendingsIntent which category did i spend the most on {date} 
+MostSpendingsIntent where did i spend most {date}
+MostSpendingsIntent where did i spend the most {date}
+MostSpendingsIntent which category did i spend the most on {date}
+MostSpendingsIntent what category did i spend the most on {date}
+MostSpendingsIntent which category did i spend the most on
+MostSpendingsIntent where did i spend most
+MostSpendingsIntent where did i spend the most
+MostSpendingsIntent which category did i spend the most on
+MostSpendingsIntent what category did i spend the most on
+
+LeastSpendingsIntent which category did i spend the least on {date} 
+LeastSpendingsIntent where did i spend least {date}
+LeastSpendingsIntent where did i spend the least {date}
+LeastSpendingsIntent which category did i spend the least on {date}
+LeastSpendingsIntent what category did i spend the least on {date}
+LeastSpendingsIntent which category did i spend the least on
+LeastSpendingsIntent where did i spend least
+LeastSpendingsIntent where did i spend the least
+LeastSpendingsIntent which category did i spend the least on
+LeastSpendingsIntent what category did i spend the least on
 
 AMAZON.HelpIntent i am confused
 
