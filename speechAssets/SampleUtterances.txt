@@ -119,12 +119,6 @@ GiveSpendingHabitsIntent how much did i spend on {category} this {date}
 GiveSpendingHabitsIntent how much did i spend on {category} {date}
 GiveSpendingHabitsIntent how much did i spend this {date}
 GiveSpendingHabitsIntent how much did i spend {date}
-GiveSpendingHabitsIntent for what did i spend {habit}
-GiveSpendingHabitsIntent what did i spend {habit} on
-GiveSpendingHabitsIntent did i {habit} on {category}
-GiveSpendingHabitsIntent did i {habit} for {category}
-GiveSpendingHabitsIntent did i {habit} 
-GiveSpendingHabitsIntent where did i {habit}
 GiveSpendingHabitsIntent how much did i spend on {category} {date}
 GiveSpendingHabitsIntent how much did i spend on {date}
 
