@@ -80,7 +80,17 @@
        ]
     },
     {
-      "intent": "OverspendIntent"
+      "intent": "OverspendIntent",
+      "slots": [
+        {
+          "name": "category",
+          "type": "LIST_OF_CATEGORIES"
+        },
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        }
+       ]
     },
     {
       "intent": "OverspendMonth",

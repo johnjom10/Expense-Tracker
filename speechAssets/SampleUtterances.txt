@@ -2,7 +2,7 @@ AddExpenseIntent add {amount} dollars on {category} on {date}
 AddExpenseIntent add {amount} dollars on {category}
 AddExpenseIntent add {amount} dollars on {date}
 AddExpenseIntent add {amount} dollars
-AddExpenseIntent add
+AddExpenseIntent add {amount}
 AddExpenseIntent spent {amount} dollars on {category} on {date}
 AddExpenseIntent spent {amount} dollars on {category}
 AddExpenseIntent spent {amount} dollars on {date}
@@ -17,22 +17,22 @@ AddExpenseIntent paid {amount} dollars for {category} on {date}
 AddExpenseIntent paid {amount} dollars for {category}
 AddExpenseIntent paid
 AddExpenseIntent lent {amount} dollars to {category} on {date}
-AddExpenseIntent lent {amount} dollars to {category} 
+AddExpenseIntent lent {amount} dollars to {category}
 AddExpenseIntent lent
 AddExpenseIntent gave {amount} dollars for {category} on {date}
 AddExpenseIntent gave {amount} dollars for {category}
 AddExpenseIntent gave {amount} dollars to {category} on {date}
-AddExpenseIntent gave {amount} dollars to {category} 
+AddExpenseIntent gave {amount} dollars to {category}
 AddExpenseIntent gave
 AddExpenseIntent transferred {amount} dollars for {category} on {date}
 AddExpenseIntent transferred {amount} dollars for {category}
 AddExpenseIntent transferred {amount} dollars to {category} on {date}
-AddExpenseIntent transferred {amount} dollars to {category} 
+AddExpenseIntent transferred {amount} dollars to {category}
 AddExpenseIntent transferred
 AddExpenseIntent debited {amount} dollars for {category} on {date}
 AddExpenseIntent debited {amount} dollars for {category}
 AddExpenseIntent debited {amount} dollars to {category} on {date}
-AddExpenseIntent debited {amount} dollars to {category} 
+AddExpenseIntent debited {amount} dollars to {category}
 AddExpenseIntent debited
 AddExpenseIntent invested {amount} dollars in {category} on {date}
 AddExpenseIntent invested {amount} dollars in {category}
@@ -45,7 +45,7 @@ AddExpenseIntent {category} payment for {amount} dollars on {date}
 AddExpenseIntent {category} payment for {amount} dollars
 AddExpenseIntent lost {amount} dollars in {category} on {date}
 AddExpenseIntent lost {amount} dollars on {date}
-AddExpenseIntent lost {amount} dollars in {category} 
+AddExpenseIntent lost {amount} dollars in {category}
 AddExpenseIntent lost
 AddExpenseIntent donated {amount} dollars towards {category} on {date}
 AddExpenseIntent donated {amount} dollars towards {category}
@@ -54,10 +54,17 @@ AddExpenseIntent donated
 AddExpenseIntent {category} for {amount} dollars on {date}
 AddExpenseIntent {category} worth {amount} dollars on {date}
 AddExpenseIntent {amount} dollars {category} {date}
-AddExpenseIntent {category} {amount} dollars {date} 
-AddExpenseIntent {amount} dollars {category} 
-AddExpenseIntent {category} {amount} dollars 
+AddExpenseIntent {category} {amount} dollars {date}
+AddExpenseIntent {amount} dollars {category}
+AddExpenseIntent {category} {amount} dollars
 AddExpenseIntent {amount} dollars
+AddExpenseIntent {amount} for {category}
+AddExpenseIntent settled debt of {amount} dollars
+AddExpenseIntent settled debt of {amount} dollars on {date}
+AddExpenseIntent contributed {amount} 
+AddExpenseIntent contributed {amount} to a cause on {date}
+
+
 
 CancelExpenditureIntent deduct {amount} dollars from {category} on {date}
 CancelExpenditureIntent deduct {amount} dollars from {category}
@@ -74,13 +81,22 @@ CancelExpenditureIntent remove entry for {amount} dollars from {category}
 CancelExpenditureIntent remove entry for {amount} dollars on {date}
 CancelExpenditureIntent remove entry for {amount} dollars
 CancelExpenditureIntent remove
+CancelExpenditureIntent remove {amount} from {category} on {date}
+CancelExpenditureIntent remove {amount} from {category}
+CancelExpenditureIntent remove {amount}
 CancelExpenditureIntent delete entry for {amount} dollars from {category} on {date}
 CancelExpenditureIntent delete entry for {amount} dollars from {category}
 CancelExpenditureIntent delete entry for {amount} dollars on {date}
 CancelExpenditureIntent delete entry for {amount} dollars
 CancelExpenditureIntent delete
+CancelExpenditureIntent annull entry for {category} on {date}
+CancelExpenditureIntent annull entry of {amount} for {category} on {date}
+CancelExpenditureIntent eliminate entry of {amount} for {category} on {date}
+CancelExpenditureIntent eliminate entry for {category} on {date}
+
 
 CancelExpenditureImmediate	{command}
+
 
 SetBudgetIntent set budget for {category} as {amount} dollars
 SetBudgetIntent set limit for {category} as {amount} dollars
@@ -94,83 +110,109 @@ SetBudgetIntent set budget as {amount} dollars
 SetBudgetIntent set limit as {amount} dollars
 SetBudgetIntent set maximum limit as {amount} dollars
 SetBudgetIntent set maximum amount as {amount} dollars
-SetBudgetIntent set budget for {date} as {amount} dollars 
-SetBudgetIntent set budget as {amount} dollars 
+SetBudgetIntent set budget for {date} as {amount} dollars
+SetBudgetIntent set budget as {amount} dollars
 SetBudgetIntent set limit for {category} as {amount} dollars for {date}
 SetBudgetIntent set maximum limit as {amount} dollars for {date}
 SetBudgetIntent set maximum amount as {amount} dollars for {date}
-SetBudgetIntent set maximum limit as {amount} dollars 
-SetBudgetIntent set maximum amount as {amount} dollars 
-SetBudgetIntent set
-
-SetBudgetIntent i wont spend more than {amount} dollars for {category} 
+SetBudgetIntent set maximum limit as {amount} dollars
+SetBudgetIntent set maximum amount as {amount} dollars
+SetBudgetIntent don't let me spend more than {amount} in {category}
+SetBudgetIntent my budget for {category} is {amount}
+SetBudgetIntent i wont spend more than {amount} dollars for {category}
 SetBudgetIntent i will not spend more than {amount} dollars for {category}
-SetBudgetIntent i shall not spend more than {amount} dollars for {category}  
+SetBudgetIntent i shall not spend more than {amount} dollars for {category}
 SetBudgetIntent i cannot spend more than {amount} dollars for {category} this {date}
-SetBudgetIntent i am planning to spend {amount} dollars for {category}  
+SetBudgetIntent i am planning to spend {amount} dollars for {category}
 SetBudgetIntent set maximum limit for {date} as {amount} dollars
 SetBudgetIntent set maximum amount for {date} as {amount} dollars
-SetBudgetIntent i wont spend more than {amount} dollars 
+SetBudgetIntent i wont spend more than {amount} dollars
 SetBudgetIntent my maximum expenditure will be {amount} dollars for {category} for {date}
-SetBudgetIntent my maximum expenditure will be {amount} dollars for {category} 
+SetBudgetIntent my maximum expenditure will be {amount} dollars for {category}
 SetBudgetIntent set maximum amount as {amount} dollars for {date}
+SetBudgetIntent The maximum amount I shall spend for {category} is {amount}
+SetBudgetIntent i'll not cross {amount} dollars in {category}
+SetBudgetIntent I wont cross {amount} dollars in  {category}
+SetBudgetIntent  notify me if i spend more than {amount} in {category}
+SetBudgetIntent tell me if i spend more than {amount} in {category}
 
-GiveSpendingHabitsIntent how much did i spend on {category} this {date}
+
+
+
+GiveSpendingHabitsIntent how much did i spend on {category} on {date}
 GiveSpendingHabitsIntent how much did i spend on {category} {date}
 GiveSpendingHabitsIntent how much did i spend this {date}
 GiveSpendingHabitsIntent how much did i spend {date}
-GiveSpendingHabitsIntent for what did i spend {habit}
-GiveSpendingHabitsIntent what did i spend {habit} on
-GiveSpendingHabitsIntent did i {habit} on {category}
-GiveSpendingHabitsIntent did i {habit} for {category}
-GiveSpendingHabitsIntent did i {habit} 
-GiveSpendingHabitsIntent where did i {habit}
 GiveSpendingHabitsIntent how much did i spend on {category} {date}
 GiveSpendingHabitsIntent how much did i spend on {date}
-
-MostSpendingsIntent which category did i spend the most on {date} 
-MostSpendingsIntent where did i spend most {date}
-MostSpendingsIntent where did i spend the most {date}
-MostSpendingsIntent which category did i spend the most on {date}
-MostSpendingsIntent what category did i spend the most on {date}
-MostSpendingsIntent which category did i spend the most on
-MostSpendingsIntent where did i spend most
-MostSpendingsIntent where did i spend the most
-MostSpendingsIntent which category did i spend the most on
-MostSpendingsIntent what category did i spend the most on
-
-LeastSpendingsIntent which category did i spend the least on {date} 
-LeastSpendingsIntent where did i spend least {date}
-LeastSpendingsIntent where did i spend the least {date}
-LeastSpendingsIntent which category did i spend the least on {date}
-LeastSpendingsIntent what category did i spend the least on {date}
-LeastSpendingsIntent which category did i spend the least on
-LeastSpendingsIntent where did i spend least
-LeastSpendingsIntent where did i spend the least
-LeastSpendingsIntent which category did i spend the least on
-LeastSpendingsIntent what category did i spend the least on
+GiveSpendingHabitsIntent how much do I have left {category}
+GiveSpendingHabitsIntent how much do I have left
 
 AMAZON.HelpIntent i am confused
 
+MostSpendingsIntent what did i spend the most on
+MostSpendingsIntent what did i spend the most on {date}
+MostSpendingsIntent where did i spend the most
+MostSpendingsIntent where did i spend the most on {date}
+MostSpendingsIntent where did the spend the most during {date}
+MostSpendingsIntent what did i spend the most on during {date}
+
+
+LeastSpendingsIntent what did i spend the least on
+LeastSpendingsIntent what did i spend the least on {date}
+LeastSpendingsIntent what did i spend the minimum amount on
+LeastSpendingsIntent what did i spend the minimum amount on {date}
+LeastSpendingsIntent where did i spend the least
+LeastSpendingsIntent where did i spend the minimum amount 
+
+
+OverspendIntent Did i exceed my budget this month
+OverspendIntent Did i stick to my budget this month
+OverspendIntent Did i exceed the limit this month
+OverspendIntent Am I within my budget
+OverspendIntent Did i cross the limit
+OverspendIntent Have I exceeded my budget
+OverspendIntent did i overspend {date}
+OverspendIntent did i overspend on {category} during {date}
+OverspendIntent did i overspend on {category}
+OverspendIntent Have i overspent in {date}
+OverspendIntent Have i overspent
+OverspendIntent did i meet my budget
+OverspendIntent did i meet my budget during {date}
+OverspendIntent did i meet my budget
+
+
+MostSpendingsMonth when did i spend the most
+MostSpendingsMonth when did i spend the most for {category}
+MostSpendingsMonth during what period  did i spend the most for {category}
+MostSpendingsMonth during what period did i spend the most
+
+LeastSpendingsMonth when did i spend the least for {category}
+LeastSpendingsMonth when did i spend the least
+LeastSpendingsMonth Which month did i spend the least for {category}
+LeastSpendingsMonth Which month did i spend the least
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+OverspendCategory where did i over spend 
+OverspendCategory where did i over spend  during {date}
+OverspendCategory where did i cross my budget 
+ 
+OverspendMonth when did i overspend
+OverspendMonth when did i overspend on {category}
+OverspendMonth When did i exceed the budget on {category} 
+OverspendMonth When did i cross the budget on {category} 
+OverspendMonth In which month did i cross the budget on {category} 
+OverspendMonth When did i exceed the limit on {category} 
+OverspendMonth When did i not stick to my budget
+OverspendMonth When did i not stick to my budget on {category}
+OverspendMonth In what month did i cross the budget on {category} 
+OverspendMonth During what period did i not keep my budget
+OverspendMonth During what period did i not keep my budget on {category}
+OverspendMonth During what period did i fail to  keep my budget
+OverspendMonth During what period did i fail to keep my budget on {category}
+OverspendMonth During what period did i cross the  budget
+OverspendMonth During what period did i cross the budget on {category}
+OverspendMonth During what period did i not keep my budget
+OverspendMonth During what period did i not keep my budget on {category}
 
