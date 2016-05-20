@@ -8,100 +8,36 @@
     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
-/**
- * This simple sample has no external dependencies or session management, and shows the most basic
- * example of how to create a Lambda function for handling Alexa Skill requests.
- *
- * Examples:
- * One-shot model:
- *  User: "Alexa, tell Greeter to say hello"
- *  Alexa: "Hello World!"
- */
+'use strict';
+var AlexaSkill = require('./AlexaSkill'),
+    eventHandlers = require('./eventHandlers'),
+    intentHandlers = require('./intentHandlers');
+
+var APP_ID = 'amzn1.echo-sdk-ams.app.6a78e294-fb00-4ec2-9e76-f3fe7f66b2d6';//replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
+var skillContext = {};
 
 /**
- * App ID for the skill
- */
-var APP_ID = undefined; //replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
-
-/**
- * The AlexaSkill prototype and helper functions
- */
-var AlexaSkill = require('./AlexaSkill');
-
-/**
- * HelloWorld is a child of AlexaSkill.
+ * ExpenseTracker is a child of AlexaSkill.
  * To read more about inheritance in JavaScript, see the link below.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
  */
-var HelloWorld = function () {
+var ExpenseTracker = function () {
     AlexaSkill.call(this, APP_ID);
+    skillContext.needMoreHelp = true;
 };
+
 
 // Extend AlexaSkill
-HelloWorld.prototype = Object.create(AlexaSkill.prototype);
-HelloWorld.prototype.constructor = HelloWorld;
+ExpenseTracker.prototype = Object.create(AlexaSkill.prototype);
+ExpenseTracker.prototype.constructor = ExpenseTracker;
 
-HelloWorld.prototype.eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
-    console.log("HelloWorld onSessionStarted requestId: " + sessionStartedRequest.requestId
-        + ", sessionId: " + session.sessionId);
-    // any initialization logic goes here
-};
+eventHandlers.register(ExpenseTracker.prototype.eventHandlers, skillContext);
+intentHandlers.register(ExpenseTracker.prototype.intentHandlers, skillContext);
 
-HelloWorld.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
-    console.log("HelloWorld onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-    var speechOutput = "Welcome to the Alexa Skills Kit, you can say hello";
-    var repromptText = "You can say hello";
-    response.ask(speechOutput, repromptText);
-};
-
-HelloWorld.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, session) {
-    console.log("HelloWorld onSessionEnded requestId: " + sessionEndedRequest.requestId
-        + ", sessionId: " + session.sessionId);
-    // any cleanup logic goes here
-};
-
-HelloWorld.prototype.intentHandlers = {
-    // register custom intent handlers
-    "AddExpenseIntent": function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
-    },
-    "GiveSpendingHabitsIntent": function (intent, session, response) {
-        response.tellWithCard("GiveSpendingHabits", "GiveSpendingHabits", "GiveSpendingHabits");
-    },
-    "CancelExpenditureIntent": function (intent, session, response) {
-        response.tellWithCard("CancelExpenditure", "CancelExpenditure", "CancelExpenditure");
-    },
-    "CancelExpenditureImmediate": function (intent, session, response) {
-        response.tellWithCard("CancelExpenditureImmediate", "CancelExpenditureImmediate", "CancelExpenditureImmediate");
-    },
-    "SetBudgetIntent": function (intent, session, response) {
-        response.tellWithCard("Budget", "Budget", "Budget");
-    },
-    "AMAZON.RepeatIntent": function (intent, session, response) {
-        response.tellWithCard("Repeat", "Repeat", "Repeat");
-    },
-    "AMAZON.StopIntent": function (intent, session, response) {
-        response.tellWithCard("Stop", "Stop", "Stop");
-    },
-    "AMAZON.YesIntent": function (intent, session, response) {
-        response.tellWithCard("Yes", "Yes", "Yes");
-    },
-    "AMAZON.NoIntent": function (intent, session, response) {
-        response.tellWithCard("No", "No", "No");
-    },
-    "AMAZON.CancelIntent": function (intent, session, response) {
-        response.tellWithCard("Cancel", "Cancel", "Cancel");
-    },
-    "AMAZON.HelpIntent": function (intent, session, response) {
-        response.ask("help", "help");
-    }
-};
-
-// Create the handler that responds to the Alexa Request.
 exports.handler = function (event, context) {
-    // Create an instance of the HelloWorld skill.
-    var helloWorld = new HelloWorld();
-    helloWorld.execute(event, context);
+    // Create an instance of the ExpenseTracker skill.
+    var expenseTracker = new ExpenseTracker();
+    expenseTracker.execute(event, context);
 };
 
