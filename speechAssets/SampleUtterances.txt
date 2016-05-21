@@ -150,20 +150,20 @@ GiveSpendingHabitsIntent how much do I have left
 
 AMAZON.HelpIntent i am confused
 
-MostSpendingsIntent what did i spend the most on
-MostSpendingsIntent what did i spend the most on {date}
-MostSpendingsIntent where did i spend the most
-MostSpendingsIntent where did i spend the most on {date}
-MostSpendingsIntent where did the spend the most during {date}
-MostSpendingsIntent what did i spend the most on during {date}
+MostSpendingsCategory what did i spend the most on
+MostSpendingsCategory what did i spend the most on {date}
+MostSpendingsCategory where did i spend the most
+MostSpendingsCategory where did i spend the most on {date}
+MostSpendingsCategory where did the spend the most during {date}
+MostSpendingsCategory what did i spend the most on during {date}
 
 
-LeastSpendingsIntent what did i spend the least on
-LeastSpendingsIntent what did i spend the least on {date}
-LeastSpendingsIntent what did i spend the minimum amount on
-LeastSpendingsIntent what did i spend the minimum amount on {date}
-LeastSpendingsIntent where did i spend the least
-LeastSpendingsIntent where did i spend the minimum amount 
+LeastSpendingsCategory what did i spend the least on
+LeastSpendingsCategory what did i spend the least on {date}
+LeastSpendingsCategory what did i spend the minimum amount on
+LeastSpendingsCategory what did i spend the minimum amount on {date}
+LeastSpendingsCategory where did i spend the least
+LeastSpendingsCategory where did i spend the minimum amount 
 
 
 OverspendIntent Did i exceed my budget this month

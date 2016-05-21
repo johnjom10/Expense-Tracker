@@ -48,7 +48,25 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     intentHandlers.SetBudgetIntent = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
-    intentHandlers.MostSpendingsIntent = function (intent, session, response) {
+    intentHandlers.OverspendIntent = function (intent, session, response) {
+        response.tellWithCard("Expense", "Expense", "Expense");
+    };
+    intentHandlers.OverspendMonth = function (intent, session, response) {
+        response.tellWithCard("Expense", "Expense", "Expense");
+    };
+    intentHandlers.OverspendCategory = function (intent, session, response) {
+        response.tellWithCard("Expense", "Expense", "Expense");
+    };
+    intentHandlers.MostSpendingsMonth = function (intent, session, response) {
+        response.tellWithCard("Expense", "Expense", "Expense");
+    };
+    intentHandlers.LeastSpendingsMonth = function (intent, session, response) {
+        response.tellWithCard("Expense", "Expense", "Expense");
+    };
+    intentHandlers.MostSpendingsCategory = function (intent, session, response) {
+        response.tellWithCard("Expense", "Expense", "Expense");
+    };
+    intentHandlers.LeastSpendingsCategory = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
     intentHandlers['AMAZON.HelpIntent'] = function (intent, session, response) {
