@@ -44,7 +44,7 @@
 
     },
     {
-      "intent": "MostSpendingsIntent",
+      "intent": "MostSpendingsCategory",
       "slots": [
         {
           "name": "date",
@@ -62,7 +62,7 @@
        ]
     },
     {
-      "intent": "LeastSpendingsIntent",
+      "intent": "LeastSpendingsCategory",
       "slots": [
         {
           "name": "date",
