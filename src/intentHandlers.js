@@ -12,6 +12,7 @@
 var textHelper = require('textHelper'),
     storage = require('storage');
 var registerIntentHandlers = function (intentHandlers, skillContext) {
+    
     intentHandlers.AddExpenseIntent = function (intent, session, response) {
         var user_id = session.user.userId;
         var data = {};
@@ -36,54 +37,123 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
             storage.saveExpense(user_id,data,response);
         }
     };
+    
     intentHandlers.GiveSpendingHabitsIntent = function (intent, session, response) {
         response.tellWithCard("GiveSpendingHabits", "GiveSpendingHabits", "GiveSpendingHabits");
     };
+    
     intentHandlers.CancelExpenditureIntent = function (intent, session, response) {
-        response.tellWithCard("CancelExpenditure", "CancelExpenditure", "CancelExpenditure");
+        var user_id = session.user.userId;
+        var data = {};
+        if(session.new == true){
+            data.category = intent.slots.category.value;
+            data.date = intent.slots.date.value;
+        }else{
+
+            data.category = session.attributes.category;
+            data.date = session.attributes.date; 
+        }
+
+        data.amount = intent.slots.amount.value;
+        if(!(data.amount)){
+            session.attributes.category = data.category;
+            session.attributes.date = data.date;
+            var speechOutput = textHelper.specifyAmount;
+            var repromptText = textHelper.specifyAmountReprompt;
+            response.ask(speechOutput,repromptText);
+            return;
+        }else{
+            data.amount = parseInt(data.amount,10);
+            data.amount *= -1; 
+            storage.saveExpense(user_id,data,response);
+        }    
     };
+    
     intentHandlers.CancelExpenditureImmediate = function (intent, session, response) {
-        response.tellWithCard("CancelExpenditureImmediate", "CancelExpenditureImmediate", "CancelExpenditureImmediate");
+    	if(session.new == false){
+
+    		response.tell(textHelper.cannotCancel);
+    	
+    	}else{
+
+    		session.attributes.deleteLast = true;
+    		response.ask(textHelper.confirmCancellation);
+    		return;
+    	}
     };
+    
     intentHandlers.SetBudgetIntent = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
+
+        var user_id = session.user.userId;
+        var data = {};
+        data.category = intent.slots.category.value;
+        data.date = intent.slots.date.value;
+ 
+
+        data.amount = intent.slots.amount.value;
+
+        if(!(data.amount)){
+            var speechOutput = textHelper.specifyBudgetAmount+textHelper.setBudgetHelp;
+            response.tell(speechOutput);
+            return;
+        }else{
+            if (!(data.category))
+                storage.setOverallBudget(user_id,data,response);
+            else
+                storage.setCategoryBudget(user_id,data,response);
+        }
     };
+    
     intentHandlers.OverspendIntent = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
+    
     intentHandlers.OverspendMonth = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
+    
     intentHandlers.OverspendCategory = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
+    
     intentHandlers.MostSpendingsMonth = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
+    
     intentHandlers.LeastSpendingsMonth = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
+    
     intentHandlers.MostSpendingsCategory = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
+    
     intentHandlers.LeastSpendingsCategory = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
+    
     intentHandlers['AMAZON.HelpIntent'] = function (intent, session, response) {
         response.ask("help", "help");
     };
+    
     intentHandlers['AMAZON.RepeatIntent'] = function (intent, session, response) {
         response.ask("help", "help");
     };
+    
     intentHandlers['AMAZON.YesIntent'] = function (intent, session, response) {
-        response.ask("help", "help");
+    	if(session.attributes.deleteLast == true)
+    		storage.cancelLastExpense(session.user.userId,response);
     };
+    
     intentHandlers['AMAZON.NoIntent'] = function (intent, session, response) {
-        response.ask("help", "help");
+    	if(session.attributes.deleteLast == true)
+    		response.tell(textHelper.dontCancel);
     };
+    
     intentHandlers['AMAZON.CancelIntent'] = function (intent, session, response) {
         response.ask("help", "help");
     };
+    
     intentHandlers['AMAZON.StopIntent'] = function (intent, session, response) {
         response.ask("help", "help");
     };

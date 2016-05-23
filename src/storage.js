@@ -11,6 +11,17 @@ var connection = mysql.createConnection({
     port     : 3306
 });
 
+var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+Date.prototype.yyyymmdd = function() {
+   var yyyy = this.getFullYear().toString();
+   var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+   var dd  = this.getDate().toString();
+   return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]); // padding
+  };
+
 var storage = (function () {
     
     function Expense(user_id,data) {
@@ -47,12 +58,15 @@ var storage = (function () {
                         console.log(err);
                         return;
                     }
-                    
-                    var speechOutput = "Expense added to your diary.";
-                    if(data.amount != 0) {
-                        speechOutput +=''; 
-                    }                    
+
+                    var speechOutput;
+                    speechOutput = "Expense added to your diary.";
+
+                    if (data.amount < 0)
+                        speechOutput = "The amount was deducted from your expenses";
+
                     response.tell(speechOutput);
+
                 };
             })(this.data));
         } 
@@ -81,8 +95,128 @@ var storage = (function () {
                 currentExpense = new Expense(user_id,data);
                 currentExpense.save(response);
             });
+        },
+        setOverallBudget: function (user_id,data, response) {
+            
+            var date;
+            if(!data.date){
+                
+                date = new Date();
+            
+            }else{
+
+                date = new Date(data.date);
+            }
+            date.setDate(1);
+
+            var formattedDate = date.yyyymmdd();
+
+            var query = "SELECT * FROM overall_budget WHERE ( user_id = ? AND month = ? )";
+            connection.query(query, [user_id, formattedDate], function(err, rows1) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if (rows1.length == 0) {
+                    query = "INSERT INTO overall_budget(amount, user_id, month) VALUES (?,?,?)";
+                }else{               
+                    query = "UPDATE overall_budget SET amount = ? WHERE ( user_id = ? AND month = ?)";
+                }
+                connection.query(query, [data.amount,user_id, formattedDate], function(err, rows2) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+
+                    var speechOutput = 'Overall budget' + ' for ' + monthNames[date.getMonth()] + ' set as ' + data.amount + ' dollars.';
+                    response.tell(speechOutput);
+            });
+        });
+    },
+        setCategoryBudget: function (user_id,data, response) {
+            
+            var date;
+            if(!data.date){
+                
+                date = new Date();
+            
+            }else{
+
+                date = new Date(data.date);
+            }
+            
+            date.setDate(1);
+            var formattedDate = date.yyyymmdd();
+            var query = "SELECT category_id FROM category WHERE category_name = ?";
+            
+            connection.query(query, [data.category], function(err, rows1) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                
+                if(rows1[0] !== undefined) {
+                    data.category_id = rows1[0].category_id;   
+                } else {                    
+                    data.category_id = 1;
+                }
+
+                query = "SELECT amount FROM overall_budget WHERE ( user_id = ? AND month = ? )";
+
+                connection.query(query, [user_id, formattedDate], function(err, rows2) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if (rows2.length != 0 ){
+                        var overallBudget = rows2[0].amount;
+                        if ( overallBudget < data.amount ) {                    
+                            var speechOutput = 'Budget not set because category budget cannot be more than overall budget for the month';
+                            response.tell(speechOutput);
+                            return;
+                        }else{
+                        console.log('test');
+                        query = "SELECT * FROM category_budget WHERE ( user_id = ? AND month = ? AND category_id = ? )";
+                        connection.query(query, [user_id, formattedDate, data.category_id], function(err, rows3) {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+                            console.log('insert or update');
+                            if (rows3.length == 0) {
+                                query = "INSERT INTO category_budget(amount, user_id,category_id, month) VALUES (?,?,?,?)";
+                            }else{               
+                                query = "UPDATE category_budget SET amount = ? WHERE ( user_id = ? AND category_id = ? AND month = ?)";
+                            }
+                            connection.query(query, [data.amount,user_id, data.category_id, formattedDate], function(err, rows4) {
+                                if (err) {
+                                    console.log(err);
+                                    return;
+                                }
+                                console.log('budget');
+                                var speechOutput = 'Budget of ' + data.category + ' for ' + monthNames[date.getMonth()] + ' set as ' + data.amount + ' dollars.';
+                                response.tell(speechOutput);
+                                return;
+                            });
+                        });
+                    }
+                }
+                });
+            });
+
+        },
+        cancelLastExpense: function (user_id,response) {
+            var query = "DELETE FROM expenses WHERE user_id = ? ORDER BY id DESC LIMIT 1";
+            
+            connection.query(query, [user_id], function(err, rows) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+                    response.tell(textHelper.cancelledExpense);
+            });
         }
-        
     };
     
 })();

@@ -14,8 +14,16 @@ var textHelper = (function () {
         //     + ' correction,'
         //     + ' help'
         //     + ' and exit. What would you like? ',
-        specifyAmount: 'How much did you spend ?',
-        specifyAmountReprompt: 'Please specify an amount.'
+        specifyAmount : 'How much did you spend ?',
+        setBudgetHelp : 'You can try,'
+                      + 'Set budget for groceries as fifty dollars for this month',
+
+        specifyBudgetAmount : 'Budget not set because you have not specified an amount.',
+        specifyAmountReprompt : 'Please specify an amount.',
+        cannotCancel : 'You cannot remove the expense right now.',
+        confirmCancellation : 'Are you sure you want to erase the last entry from your diary ?',
+        cancelledExpense : 'The last expense entry has been erased from your diary.',
+        dontCancel : 'Ok. I\'m retaining the entry in your diary.'
     };
 })();
 module.exports = textHelper;
