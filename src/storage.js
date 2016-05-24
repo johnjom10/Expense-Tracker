@@ -237,7 +237,112 @@ var storage = (function () {
             });
 
         },
+        getTotalExpenseByMonth: function(user_id, date, callback){ 
 
+            var mm = (date.getMonth()+1).toString();
+            mm = mm[1]?mm:"0"+mm[0];
+            var query = 'SELECT SUM(amount) FROM expenses WHERE user_id = ? AND MONTH(date) = ? AND YEAR(date) = ?';
+            connection.query(query, [user_id, mm, date.getFullYear()], function(err, expenditure) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(expenditure[0]['SUM(amount)']!=null)
+                    callback(expenditure[0]['SUM(amount)']);
+                else
+                    callback(0);
+            });
+        },
+        getCategoryExpenseByMonth: function(user_id, category, date, callback){
+
+            connection.query('SELECT category_id FROM category WHERE category_name = ?',[category], function(err, cat_id) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(cat_id.length == 0){
+                    cat_id[0]={};
+                    cat_id[0].category_id = 1;
+                }
+
+                var mm = (date.getMonth()+1).toString();
+                mm = mm[1]?mm:"0"+mm[0];
+                var query = 'SELECT SUM(amount) FROM expenses  WHERE (user_id = ? AND category_id = ? AND MONTH(date) = ? AND YEAR(date) = ?)';
+                connection.query(query, [user_id, cat_id[0].category_id, mm, date.getFullYear()], function(err, expenditure) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if(expenditure[0]['SUM(amount)']!=null)
+                        callback(expenditure[0]['SUM(amount)'] + ' on ' + category);
+                    else
+                        callback('No Expenses on ' + category);
+                });
+            });
+        },  
+        getTotalBudget: function(user_id, date,callback){
+            
+            var mm = (date.getMonth()+1).toString();
+            mm = mm[1]?mm:"0"+mm[0];
+            var query = 'SELECT amount FROM overall_budget WHERE user_id = ? AND MONTH(month) = ? AND YEAR(month) = ?';
+            connection.query(query, [user_id, mm, date.getFullYear()], function(err, budget){
+                if(err){
+                    console.log(err);
+                    return;
+                }
+                if (budget.length == 0){
+                    callback(-1);
+                }else{
+                    callback(budget[0].amount);
+                }
+            });
+        },              
+        getCategoryBudget: function(user_id, category, date, callback){
+            var mm = (date.getMonth()+1).toString();
+            mm = mm[1]?mm:"0"+mm[0];
+            var query = 'SELECT amount FROM category_budget,category WHERE category.category_id = category_budget.category_id AND (user_id = ? AND category_id = ? AND MONTH(month) = ? AND YEAR(month) = ?)';
+            connection.query(query, [user_id, cat_id[0].category_id, mm, date.getFullYear()], function(err, budget) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(budget.length == 0){
+                    callback(-1);
+                }else{
+                    callback(budget[0].amount);
+                }
+            });
+        }, 
+
+        getExpense: function(user_id, date, callback){
+            var formattedDate = date.yyyymmdd();
+            var query = 'SELECT SUM(amount) FROM expenses WHERE user_id=? AND date = ?';
+            connection.query(query, [user_id, formattedDate], function(err, expenditure) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(expenditure[0]['SUM(amount)']==null)
+                    callback(0);
+                else
+                    callback(expenditure[0]['SUM(amount)']);
+            });
+        },
+        
+        getExpenseByCategory: function(user_id, category, date, callback){
+            var formattedDate = date.yyyymmdd();
+            var query = 'SELECT SUM(amount) FROM expenses,category WHERE expenses.category_id = category.category_id AND user_id = ? AND category_id = ? AND date = ?';
+            connection.query(query, [user_id, cat_id[0].category_id, formattedDate], function(err, expenditure) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(expenditure[0]['SUM(amount)']==null)
+                    callback(0);
+                else
+                    callback(expenditure[0]['SUM(amount)']);
+                });
+        } ,      
         /**
          * Collects all expenses for the specified date
          */

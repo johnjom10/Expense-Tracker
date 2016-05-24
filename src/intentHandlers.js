@@ -39,7 +39,26 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     };
     
     intentHandlers.GiveSpendingHabitsIntent = function (intent, session, response) {
-        response.tellWithCard("GiveSpendingHabits", "GiveSpendingHabits", "GiveSpendingHabits");
+        var user_id = session.user.userId;
+        var data = {};
+        data.category = intent.slots.category.value;
+        var date = intent.slots.date.value;
+        var speechOutput;
+        if(!date){
+            data.date = new Date();
+        }else{
+        	data.date = new Date(date);
+        }
+        if(!(data.category)){
+            storage.getTotalExpenseByMonth(user_id, data.date,function(result){
+            	response.tell(result);
+            });
+        }
+        else{
+        	storage.getCategoryExpenseByMonth(user_id, data.category, data.date, function(result){
+        		response.tell(result);
+        	});
+        }
     };
     
     intentHandlers.CancelExpenditureIntent = function (intent, session, response) {
