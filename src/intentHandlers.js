@@ -104,6 +104,12 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
         }
     };
     
+    intentHandlers.ListAllCategoriesIntent = function (intent, session, response) {
+        storage.getCategories(response);
+    };
+    intentHandlers.ListAllExpensesIntent = function (intent, session, response) {
+        storage.listExpenses(session.user.userId,intent.slots.date.value,response);
+    };
     intentHandlers.OverspendIntent = function (intent, session, response) {
         response.tellWithCard("Expense", "Expense", "Expense");
     };
@@ -133,7 +139,9 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     };
     
     intentHandlers['AMAZON.HelpIntent'] = function (intent, session, response) {
-        response.ask("help", "help");
+        var speechOutput = textHelper.helpText + textHelper.examplesText,
+            repromptText = 'What do you want to do ?';
+        response.ask(speechOutput, repromptText);
     };
     
     intentHandlers['AMAZON.RepeatIntent'] = function (intent, session, response) {

@@ -22,20 +22,15 @@ var registerEventHandlers = function (eventHandlers, skillContext) {
         //Speak welcome message and ask user questions
         //based on whether there are players or not.
         console.log('Expense Tracker Launched');
+        var speechText = 'Welcome to Expense Tracker. Opening your diary. What expense do you want to add to the diary ?',
+        	repromptText = textHelper.helpText+'What do you want to do ?';
+        response.ask(speechText,repromptText);
     };
     
-    eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
-        console.log("ExpenseTracker onSessionStarted requestId: " + sessionStartedRequest.requestId + ", sessionId: " + session.sessionId);
-        // any initialization logic goes here
-    };
-
-
     eventHandlers.onSessionEnded = function (sessionEndedRequest, session) {
         console.log("ExpenseTracker onSessionEnded requestId: " + sessionEndedRequest.requestId
         + ", sessionId: " + session.sessionId);
-        // any cleanup logic goes here
-
-        
+        // any cleanup logic goes here        
     };
 
 };

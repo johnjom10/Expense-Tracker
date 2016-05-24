@@ -162,8 +162,18 @@
 
     },
     {
-      "intent": "AMAZON.RepeatIntent"
+      "intent": "ListAllCategoriesIntent"
     },
+    {
+      "intent": "ListAllExpensesIntent",
+      "slots": [
+        {
+          "name": "date",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    },
+
     {
       "intent": "AMAZON.YesIntent"
     },

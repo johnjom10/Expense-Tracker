@@ -141,14 +141,71 @@ SetBudgetIntent tell me if i spend more than {amount} in {category}
 
 GiveSpendingHabitsIntent how much did i spend on {category} on {date}
 GiveSpendingHabitsIntent how much did i spend on {category} {date}
-GiveSpendingHabitsIntent how much did i spend this {date}
+GiveSpendingHabitsIntent how much did i spend  {date}
 GiveSpendingHabitsIntent how much did i spend {date}
 GiveSpendingHabitsIntent how much did i spend on {category} {date}
 GiveSpendingHabitsIntent how much did i spend on {date}
 GiveSpendingHabitsIntent how much do I have left {category}
 GiveSpendingHabitsIntent how much do I have left
 
+ListAllCategoriesIntent list all available categories
+ListAllCategoriesIntent list all categories
+ListAllCategoriesIntent list categories
+ListAllCategoriesIntent show all available categories
+ListAllCategoriesIntent show all categories
+ListAllCategoriesIntent show categories
+ListAllCategoriesIntent show me all available categories
+ListAllCategoriesIntent show me all categories
+ListAllCategoriesIntent show me categories
+ListAllCategoriesIntent tell all available categories
+ListAllCategoriesIntent tell all categories
+ListAllCategoriesIntent tell categories
+ListAllCategoriesIntent tell me all available categories
+ListAllCategoriesIntent tell me all categories
+ListAllCategoriesIntent tell me categories
+ListAllCategoriesIntent get all available categories
+ListAllCategoriesIntent get all categories
+ListAllCategoriesIntent get categories
+ListAllCategoriesIntent give all available categories
+ListAllCategoriesIntent give all categories
+ListAllCategoriesIntent give categories
+
+ListAllExpensesIntent list all expenses of {date}
+ListAllExpensesIntent list all expenses
+ListAllExpensesIntent list expenses of {date}
+ListAllExpensesIntent list expenses
+ListAllExpensesIntent get all expenses of {date}
+ListAllExpensesIntent get all expenses
+ListAllExpensesIntent get expenses of {date}
+ListAllExpensesIntent get expenses
+ListAllExpensesIntent show me all expenses of {date}
+ListAllExpensesIntent show me all expenses
+ListAllExpensesIntent show me expenses of {date}
+ListAllExpensesIntent show me expenses
+ListAllExpensesIntent show all expenses of {date}
+ListAllExpensesIntent show all expenses
+ListAllExpensesIntent show expenses of {date}
+ListAllExpensesIntent show expenses
+ListAllExpensesIntent tell me all expenses of {date}
+ListAllExpensesIntent tell me all expenses
+ListAllExpensesIntent tell me expenses of {date}
+ListAllExpensesIntent tell me expenses
+ListAllExpensesIntent tell all expenses of {date}
+ListAllExpensesIntent tell all expenses
+ListAllExpensesIntent tell expenses of {date}
+ListAllExpensesIntent tell expenses
+ListAllExpensesIntent give me all expenses of {date}
+ListAllExpensesIntent give me all expenses
+ListAllExpensesIntent give me expenses of {date}
+ListAllExpensesIntent give me expenses
+ListAllExpensesIntent give all expenses of {date}
+ListAllExpensesIntent give all expenses
+ListAllExpensesIntent give expenses of {date}
+ListAllExpensesIntent give expenses
+
+
 AMAZON.HelpIntent i am confused
+AMAZON.HelpIntent i am confused help me
 
 MostSpendingsCategory what did i spend the most on
 MostSpendingsCategory what did i spend the most on {date}

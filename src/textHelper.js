@@ -1,19 +1,20 @@
 'use strict';
 var textHelper = (function () {
     return {
-        // helpText: 'You can store your workouts,'
-        //     + ' find your workouts for a date, find your best for a workout,'
-        //     + ' list all supported workouts, or clear your last workout. ',
-        // examplesText: 'Here\'s some things you can say,'
-        //     + ' Add 10 push ups,'
-        //     + ' Store twenty Pull downs with 20 pounds,'
-        //     + ' what\'s my best for push ups,'
-        //     + ' get me all supported exercises,'
-        //     + ' find my exercises on last friday,'
-        //     + ' get my push ups on yesterday,'
-        //     + ' correction,'
-        //     + ' help'
-        //     + ' and exit. What would you like? ',
+         helpText: 'You can add your expenses,'
+            + ' set overall and category-wise budgets for a month,'
+            + ' know your spending habits, find out in what category you spent the most,'
+            + ' list all available categories, cancel your last expense, or deduct an amount from your diary. ',
+        examplesText: 'Here\'s some things you can try,'
+            + ' Spent fifty dollars on groceries today,'
+            + ' Set budget for shopping as two hundred dollars for this month ,'
+            + ' how much did i spend on travel last month,'
+            + ' list all available categories,'
+            + ' list the expenses of today,'
+            + ' strike that,'
+            + ' deduct five dollars from groceries on June,'
+            + ' i am confused help me,'
+            + ' and exit. What do you want to do ?',
         specifyAmount : 'How much did you spend ?',
         setBudgetHelp : 'You can try,'
                       + 'Set budget for groceries as fifty dollars for this month',
