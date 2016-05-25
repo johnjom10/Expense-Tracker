@@ -47,17 +47,17 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
         if(!date){
             data.date = new Date();
         }else{
-        	data.date = new Date(date);
+            data.date = new Date(date);
         }
         if(!(data.category)){
             storage.getTotalExpenseByMonth(user_id, data.date,function(result){
-            	response.tell(result);
+                response.tell(result);
             });
         }
         else{
-        	storage.getCategoryExpenseByMonth(user_id, data.category, data.date, function(result){
-        		response.tell(result);
-        	});
+            storage.getCategoryExpenseByMonth(user_id, data.category, data.date, function(result){
+                response.tell(result);
+            });
         }
     };
     
