@@ -51,10 +51,7 @@ AddExpenseIntent donated {amount} dollars towards {category} on {date}
 AddExpenseIntent donated {amount} dollars towards {category}
 AddExpenseIntent donated {amount} dollars
 AddExpenseIntent donated
-AddExpenseIntent {category} for {amount} dollars on {date}
-AddExpenseIntent {category} worth {amount} dollars on {date}
 AddExpenseIntent {amount} dollars {category} {date}
-AddExpenseIntent {category} {amount} dollars {date}
 AddExpenseIntent {amount} dollars {category}
 AddExpenseIntent {category} {amount} dollars
 AddExpenseIntent {amount} dollars
@@ -150,10 +147,14 @@ GiveSpendingHabitsIntent how much do I have left
 
 ListAllCategoriesIntent list all available categories
 ListAllCategoriesIntent list all categories
+ListAllCategoriesIntent list all 
 ListAllCategoriesIntent list categories
+ListAllCategoriesIntent list 
 ListAllCategoriesIntent show all available categories
 ListAllCategoriesIntent show all categories
+ListAllCategoriesIntent show 
 ListAllCategoriesIntent show categories
+ListAllCategoriesIntent show all categories
 ListAllCategoriesIntent show me all available categories
 ListAllCategoriesIntent show me all categories
 ListAllCategoriesIntent show me categories
@@ -171,32 +172,44 @@ ListAllCategoriesIntent give all categories
 ListAllCategoriesIntent give categories
 
 ListAllExpensesIntent list all expenses of {date}
+ListAllExpensesIntent list all expenses for {date}
 ListAllExpensesIntent list all expenses
 ListAllExpensesIntent list expenses of {date}
+ListAllExpensesIntent list expenses for {date}
 ListAllExpensesIntent list expenses
 ListAllExpensesIntent get all expenses of {date}
+ListAllExpensesIntent get all expenses for {date}
 ListAllExpensesIntent get all expenses
 ListAllExpensesIntent get expenses of {date}
 ListAllExpensesIntent get expenses
 ListAllExpensesIntent show me all expenses of {date}
+ListAllExpensesIntent show me all expenses for {date}
 ListAllExpensesIntent show me all expenses
 ListAllExpensesIntent show me expenses of {date}
+ListAllExpensesIntent show me expenses for {date}
 ListAllExpensesIntent show me expenses
 ListAllExpensesIntent show all expenses of {date}
+ListAllExpensesIntent show all expenses for {date}
 ListAllExpensesIntent show all expenses
 ListAllExpensesIntent show expenses of {date}
+ListAllExpensesIntent show expenses for {date}
 ListAllExpensesIntent show expenses
 ListAllExpensesIntent tell me all expenses of {date}
+ListAllExpensesIntent tell me all expenses for {date}
 ListAllExpensesIntent tell me all expenses
 ListAllExpensesIntent tell me expenses of {date}
+ListAllExpensesIntent tell me expenses for {date}
 ListAllExpensesIntent tell me expenses
 ListAllExpensesIntent tell all expenses of {date}
 ListAllExpensesIntent tell all expenses
 ListAllExpensesIntent tell expenses of {date}
+ListAllExpensesIntent tell expenses for {date}
 ListAllExpensesIntent tell expenses
 ListAllExpensesIntent give me all expenses of {date}
+ListAllExpensesIntent give me all expenses for {date}
 ListAllExpensesIntent give me all expenses
 ListAllExpensesIntent give me expenses of {date}
+ListAllExpensesIntent give me expenses for {date}
 ListAllExpensesIntent give me expenses
 ListAllExpensesIntent give all expenses of {date}
 ListAllExpensesIntent give all expenses
