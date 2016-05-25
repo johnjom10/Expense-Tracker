@@ -417,6 +417,92 @@ var storage = (function () {
             });
 
         },
+
+        /**
+         * Identifies Which category the user spent the most on.
+         */
+
+        spentMostOn : function(user_id,data,response){
+
+            var date = data.date ; 
+            var mm = (date.getMonth()+1).toString();
+                mm = mm[1]?mm:"0"+mm[0];
+            data.mostvalue = 0 ;
+            data.mostcategory = "" ;     
+            var query = 'SELECT SUM(amount),category_name FROM expenses,category WHERE ( ( expenses.category_id = category.category_id ) AND month(date) = ? AND year(date) = ? AND user_id = ?) GROUP BY category_name';
+            connection.query(query,[mm, date.getFullYear(),user_id], function(err, rows) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                else{
+                    
+                 if(rows.length == 0){
+                    var  speechOutput = "You Have no Expenses added.Please Make an entry when you please." ; 
+                    response.tell(speechOutput);
+                }
+
+                else{   
+                    for (var i = 0;i < rows.length ; i++){
+                        if(data.mostvalue < rows[i]['SUM(amount)']){  
+                             data.mostvalue = rows[i]['SUM(amount)'];
+                             data.mostcategory = rows[i]['category_name'];
+                         }   
+                     }
+                           
+                    var  speechOutput = "You spent most on  " + data.mostcategory + " for an amount of  " +data.mostvalue ; 
+                    response.tell(speechOutput);
+                }
+
+             }
+
+         });
+
+                         
+         },
+       
+		/**
+         * Identifies Which category the user spent the least on.
+         */
+
+           spentLeastOn : function(user_id,data,response){
+
+           var date = data.date ; 
+           var mm = (date.getMonth()+1).toString();
+            mm = mm[1]?mm:"0"+mm[0];
+            data.leastvalue = 0 ;
+            data.leastcategory = "" ;     
+            var query = 'SELECT SUM(amount),category_name FROM expenses,category WHERE ( ( expenses.category_id = category.category_id ) AND month(date) = ? AND year(date) = ? AND user_id = ?) GROUP BY category_name';
+            connection.query(query,[mm, date.getFullYear(),user_id], function(err, rows) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                else{
+                if(rows.length == 0){
+                    var  speechOutput = "You Have no Expenses added.Please Make an entry when you please." ; 
+                    response.tell(speechOutput);
+                }
+                else{
+                data.leastvalue = rows[0]['SUM(amount)'];
+                data.leastcategory = rows[0]['category_name'];
+                    for (var i = 0;i < rows.length ; i++){
+                         
+                         if(data.leastvalue > rows[i]['SUM(amount)']){  
+
+                             data.leastvalue = rows[i]['SUM(amount)'];
+                             data.leastcategory = rows[i]['category_name'];
+
+                         }   
+                     }
+                 
+                     var  speechOutput = "You spent least on  " + data.leastcategory + " for an amount of  " +data.leastvalue ; 
+                     response.tell(speechOutput);
+                 }
+            }
+        });
+
+        },
         /**
          * Deletes the last entry in the expenses table for the specified user
          */

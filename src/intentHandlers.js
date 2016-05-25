@@ -150,11 +150,29 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     };
     
     intentHandlers.MostSpendingsCategory = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
+      var user_id = session.user.userId;
+      var data = {};
+     
+            if(!intent.slots.date.value)
+               { data.date = new Date();}
+            else
+               { data.date = new Date(intent.slots.date.value);}
+       storage.spentMostOn(user_id,data,response);
+
+            
     };
     
     intentHandlers.LeastSpendingsCategory = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
+      var user_id = session.user.userId;
+      var data = {};
+      
+            if(!intent.slots.date.value)
+               { data.date = new Date();}
+            else
+               { data.date = new Date(intent.slots.date.value);}
+       storage.spentLeastOn(user_id,data,response);
+
+            
     };
     
     intentHandlers['AMAZON.HelpIntent'] = function (intent, session, response) {
