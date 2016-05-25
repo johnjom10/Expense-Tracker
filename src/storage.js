@@ -47,7 +47,7 @@ var storage = (function () {
         /**
          * Store an expense into Db
          */
-        save: function (response) {
+        save: function (speechOutput, response) {
             var date;
             if(!this.data.date){
                 date = new Date();
@@ -65,8 +65,7 @@ var storage = (function () {
                         return;
                     }
 
-                    var speechOutput;
-                    speechOutput = "Expense added to your diary.";
+                    speechOutput += "Expense added to your diary.";
 
                     if (data.amount < 0)
                         speechOutput = "The amount was deducted from your expenses";
@@ -98,8 +97,38 @@ var storage = (function () {
                 } else {                    
                     data.category_id = 1;
                 }
-                currentExpense = new Expense(user_id,data);
-                currentExpense.save(response);
+
+                var date;
+                if(!data.date){
+                    date = new Date();
+                }else{
+                    date = new Date(data.date);
+                }
+                var speechOutput = "";
+                storage.getTotalExpenseByMonth(user_id, date, function(monthlyExpense){
+                    storage.getTotalBudget(user_id, date, function(monthlyBudget){
+                        if(((parseFloat(monthlyExpense) + parseFloat(data.amount)) > monthlyBudget) && monthlyBudget != -1){
+                            speechOutput += "Oops! Looks like you overspent this month.";
+                            console.log('overall'+monthlyExpense);
+                            currentExpense = new Expense(user_id,data);
+                            currentExpense.save(speechOutput, response);
+                        }
+                        else{
+
+                            storage.getExpenseByCategory(user_id, data.category, date, function(categoryExpense){
+                                storage.getCategoryBudget(user_id, data.category, date, function(categoryBudget){
+                                    if(((parseFloat(categoryExpense) + parseFloat(data.amount)) > categoryBudget) && categoryBudget!=-1)
+                                        speechOutput += "Oops! Looks like you overspent" + " on " + data.category + " this month.";
+                                        
+                                    
+                                    console.log('category'+monthlyExpense);
+                                    currentExpense = new Expense(user_id,data);
+                                    currentExpense.save(speechOutput, response);
+                                });
+                            });
+                        }
+                    });
+                });
             });
         },
         /**
@@ -181,12 +210,14 @@ var storage = (function () {
                         return;
                     }
                     if (rows2.length != 0 ){
+                        console.log('row empty');
                         var overallBudget = rows2[0].amount;
                         if ( overallBudget < data.amount ) {                    
                             var speechOutput = 'Budget not set because category budget cannot be more than overall budget for the month';
                             response.tell(speechOutput);
                             return;
-                        }else{
+                        }
+                    }
                         	console.log('test');
                         	query = "SELECT * FROM category_budget WHERE ( user_id = ? AND month = ? AND category_id = ? )";
                         	connection.query(query, [user_id, formattedDate, data.category_id], function(err, rows3) {
@@ -211,8 +242,7 @@ var storage = (function () {
                                 	return;
                             	});
                         	});
-                    	}
-                	}
+                	
                 });
             });
 
@@ -300,8 +330,8 @@ var storage = (function () {
         getCategoryBudget: function(user_id, category, date, callback){
             var mm = (date.getMonth()+1).toString();
             mm = mm[1]?mm:"0"+mm[0];
-            var query = 'SELECT amount FROM category_budget,category WHERE category.category_id = category_budget.category_id AND (user_id = ? AND category_id = ? AND MONTH(month) = ? AND YEAR(month) = ?)';
-            connection.query(query, [user_id, cat_id[0].category_id, mm, date.getFullYear()], function(err, budget) {
+            var query = 'SELECT amount FROM category_budget,category WHERE category.category_id = category_budget.category_id AND (user_id = ? AND category_name = ? AND MONTH(month) = ? AND YEAR(month) = ?)';
+            connection.query(query, [user_id, category, mm, date.getFullYear()], function(err, budget) {
                 if (err) {
                     console.log(err);
                     return;
@@ -331,8 +361,8 @@ var storage = (function () {
         
         getExpenseByCategory: function(user_id, category, date, callback){
             var formattedDate = date.yyyymmdd();
-            var query = 'SELECT SUM(amount) FROM expenses,category WHERE expenses.category_id = category.category_id AND user_id = ? AND category_id = ? AND date = ?';
-            connection.query(query, [user_id, cat_id[0].category_id, formattedDate], function(err, expenditure) {
+            var query = 'SELECT SUM(amount) FROM expenses,category WHERE expenses.category_id = category.category_id AND user_id = ? AND category_name = ? AND date = ?';
+            connection.query(query, [user_id, category, formattedDate], function(err, expenditure) {
                 if (err) {
                     console.log(err);
                     return;
