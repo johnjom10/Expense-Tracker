@@ -388,7 +388,7 @@ var storage = (function () {
         		formattedDate = temp.yyyymmdd();
         	}
 
-            var query = 'SELECT amount,category_name FROM expenses,category WHERE ( ( expenses.category_id = category.category_id ) AND date = ? AND user_id = ?)';
+            var query = 'SELECT SUM(amount),category_name FROM expenses,category WHERE ( ( expenses.category_id = category.category_id ) AND date = ? AND user_id = ?) GROUP BY category_name';
             connection.query(query, [formattedDate, user_id], function(err, rows) {
             	if (err) {
                     console.log(err);
@@ -403,8 +403,8 @@ var storage = (function () {
                 	speechText = "Expenses on <say-as interpret-as = \"date\">" + temp.yyyymmdddash() + " </say-as>";
                 	console.log(rows);
                 	for (var i = 0;i < rows.length ; i++){
-                		if(rows[i].amount > 0){
-                			speechText += '<s>' + rows[i].amount + ' dollars on ' + rows[i].category_name + '</s>'; 
+                		if(parseFloat((rows[i]["SUM(amount)"])) > 0){
+                			speechText += '<s>' + rows[i]["SUM(amount)"] + ' dollars on ' + rows[i].category_name + '</s>'; 
                 		}
                 	}
     			}
