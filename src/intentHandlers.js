@@ -182,15 +182,77 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     storage.listExpenses(session.user.userId, intent.slots.date.value, response)
   }
   intentHandlers.OverspendIntent = function (intent, session, response) {
-    response.tellWithCard('Expense', 'Expense', 'Expense')
+    var userId = session.user.userId
+    var data = {}
+    data.category = intent.slots.category.value
+    var date = intent.slots.date.value
+    var speechOutput
+
+    if (!date) {
+      data.date = new Date()
+    } else {
+      data.date = new Date(date)
+    }
+
+    if (!(data.category)) {
+      storage.getTotalBudget(userId, data.date, function (result) {
+        if (result === -1) {
+          speechOutput = 'You have not set a budget for this month'
+          response.tell(speechOutput)
+        } else {
+          storage.getTotalExpenseByMonth(userId, data.date, function (exp) {
+            if (parseFloat(exp) > parseFloat(result)) {
+              speechOutput = 'You have exceeded your budget for this month.'
+              response.tell(speechOutput)
+            } else {
+              speechOutput = 'You have not exceeded your budget for this month.'
+              response.tell(speechOutput)
+            }
+          })
+        }
+      })
+    } else {
+      storage.getCategoryBudget(userId, data.category, data.date, function (result) {
+        if (result === -1) {
+          speechOutput = 'You have not set a budget for this category'
+          response.tell(speechOutput)
+        } else {
+          storage.getExpenseByCategory(userId, data.category, data.date, function (exp) {
+            if (parseFloat(exp) > parseFloat(result)) {
+              speechOutput = 'You have exceeded your category budget for this month.'
+              response.tell(speechOutput)
+            } else {
+              speechOutput = 'You have not exceeded your category budget for this month.'
+              response.tell(speechOutput)
+            }
+          })
+        }
+      })
+    }
   }
 
   intentHandlers.OverspendMonth = function (intent, session, response) {
-    response.tellWithCard('Expense', 'Expense', 'Expense')
+    var userId = session.user.userId
+    var data = {}
+    data.category = intent.slots.category.value
+    var date = new Date()
+    if (!data.category) {
+      storage.OverallOverSpentMonth(userId, date, response)
+    } else {
+      storage.CategoryOverSpentMonth(userId, data.category, date, response)
+    }
   }
 
   intentHandlers.OverspendCategory = function (intent, session, response) {
-    response.tellWithCard('Expense', 'Expense', 'Expense')
+    var userId = session.user.userId
+    var data = {}
+    var date = intent.slots.date.value
+    if (!date) {
+      data.date = new Date()
+    } else {
+      data.date = new Date(date)
+    }
+    storage.overSpentCategory(userId, data.date, response)
   }
 
   intentHandlers.MostSpendingsMonth = function (intent, session, response) {

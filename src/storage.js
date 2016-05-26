@@ -240,6 +240,84 @@ var storage = (function () {
         })
       })
     },
+
+    /**
+     * Checks whether overall budget has been exceeded
+     */
+
+    OverallOverSpentMonth: function (userId, date, response) {
+      var query = 'SELECT sum,month(date) as month,overall_budget.amount as budget from (SELECT sum(amount) as sum,date from expenses where user_id = ? AND year(date) = ? group by month(date)) as temp,overall_budget where month(overall_budget.month) = month(temp.date) and user_id = ? and sum > overall_budget.amount'
+      var speechOutput
+      connection.query(query, [userId, date.getFullYear(), userId], function (err, rows) {
+        if (err) {
+          console.log(err)
+          return
+        }
+
+        if (rows.length === 0) {
+          speechOutput = 'You have not overspent this year.'
+          response.tell(speechOutput)
+          return
+        }
+        speechOutput = 'Budget exceeded during '
+        for (var k in rows) {
+          speechOutput += ', ' + monthNames[rows[k].month - 1]
+        }
+        response.tell(speechOutput)
+      })
+    },
+
+    /**
+     * Checks whether category budget has been exceeded
+     */
+
+    CategoryOverSpentMonth: function (userId, category, date, response) {
+      var query = ' SELECT sum,month(date) as month,category_budget.amount as budget from (SELECT sum(amount) as sum,expenses.category_id,date from expenses,category where expenses.category_id = category.category_id AND category.category_name = ? AND user_id = ? AND year(date) = ? group by month(date)) as temp,category_budget where month(category_budget.month) = month(temp.date) and category_budget.category_id = temp.category_id and user_id = ? and sum > category_budget.amount'
+      var speechOutput
+      connection.query(query, [category, userId, date.getFullYear(), userId], function (err, rows) {
+        if (err) {
+          console.log(err)
+          return
+        }
+        if (rows.length === 0) {
+          speechOutput = 'You have not overspent on ' + category + ' this year.'
+          response.tell(speechOutput)
+          return
+        }
+        speechOutput = 'Budget for ' + category + ' exceeded during '
+        for (var k in rows) {
+          speechOutput += ', ' + monthNames[rows[k].month - 1]
+        }
+        response.tell(speechOutput)
+      })
+    },
+
+    /**
+     * Returns the categories in which budget has been exceeded 
+     */
+
+    overSpentCategory: function (userId, date, response) {
+      var mm = date.mm()
+      var queryString = 'SELECT category_name FROM (SELECT SUM(expenses.amount) as sum, category.category_name , category_budget.amount FROM expenses, category, category_budget WHERE expenses.category_id = category.category_id AND category_budget.category_id = category.category_id AND expenses.user_id = ? AND MONTH(expenses.date) = ? AND MONTH(category_budget.month) = ? AND YEAR(expenses.date) = ?  GROUP BY expenses.category_id) AS result where sum > result.amount'
+      var speechOutput
+      connection.query(queryString, [userId, mm, mm, date.getFullYear()], function (err, rows) {
+        if (err) {
+          console.log(err)
+          return
+        }
+        if (rows.length === 0) {
+          speechOutput = 'You have not overspent on  any categories .'
+          response.tell(speechOutput)
+          return
+        }
+        speechOutput = 'Budget exceeded for'
+        for (var k in rows) {
+          speechOutput += ', ' + rows[k].category_name
+        }
+        response.tell(speechOutput)
+      })
+    },
+
     /**
      * Collects the entire list of categories from db
      */
