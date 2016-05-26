@@ -8,181 +8,174 @@
     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
-'use strict';
-var textHelper = require('textHelper'),
-    storage = require('storage');
+'use strict'
+var textHelper = require('textHelper')
+var storage = require('storage')
 var registerIntentHandlers = function (intentHandlers, skillContext) {
-    
-    intentHandlers.AddExpenseIntent = function (intent, session, response) {
-        var user_id = session.user.userId;
-        var data = {};
-        if(session.new == true){
-            data.category = intent.slots.category.value;
-            data.date = intent.slots.date.value;
-        }else{
+  intentHandlers.AddExpenseIntent = function (intent, session, response) {
+    var userId = session.user.userId
+    var data = {}
+    if (session.new === true) {
+      data.category = intent.slots.category.value
+      data.date = intent.slots.date.value
+    } else {
+      data.category = session.attributes.category
+      data.date = session.attributes.date
+    }
 
-            data.category = session.attributes.category;
-            data.date = session.attributes.date; 
-        }
+    data.amount = intent.slots.amount.value
+    if (!(data.amount)) {
+      session.attributes.category = data.category
+      session.attributes.date = data.date
+      var speechOutput = textHelper.specifyAmount
+      var repromptText = textHelper.specifyAmountReprompt
+      response.ask(speechOutput, repromptText)
+      return
+    } else {
+      storage.saveExpense(userId, data, response)
+    }
+  }
 
-        data.amount = intent.slots.amount.value;
-        if(!(data.amount)){
-            session.attributes.category = data.category;
-            session.attributes.date = data.date;
-            var speechOutput = textHelper.specifyAmount;
-            var repromptText = textHelper.specifyAmountReprompt;
-            response.ask(speechOutput,repromptText);
-            return;
-        }else{
-            storage.saveExpense(user_id,data,response);
-        }
-    };
-    
-    intentHandlers.GiveSpendingHabitsIntent = function (intent, session, response) {
-        var user_id = session.user.userId;
-        var data = {};
-        data.category = intent.slots.category.value;
-        var date = intent.slots.date.value;
-        var speechOutput;
-        if(!date){
-            data.date = new Date();
-        }else{
-            data.date = new Date(date);
-        }
-        if(!(data.category)){
-            storage.getTotalExpenseByMonth(user_id, data.date,function(result){
-                response.tell(result);
-            });
-        }
-        else{
-            storage.getCategoryExpenseByMonth(user_id, data.category, data.date, function(result){
-                response.tell(result);
-            });
-        }
-    };
-    
-    intentHandlers.CancelExpenditureIntent = function (intent, session, response) {
-        var user_id = session.user.userId;
-        var data = {};
-        if(session.new == true){
-            data.category = intent.slots.category.value;
-            data.date = intent.slots.date.value;
-        }else{
+  intentHandlers.GiveSpendingHabitsIntent = function (intent, session, response) {
+    var userId = session.user.userId
+    var data = {}
+    data.category = intent.slots.category.value
+    var date = intent.slots.date.value
+    if (!date) {
+      data.date = new Date()
+    } else {
+      data.date = new Date(date)
+    }
+    if (!(data.category)) {
+      storage.getTotalExpenseByMonth(userId, data.date, function (result) {
+        response.tell(result)
+      })
+    } else {
+      storage.getCategoryExpenseByMonth(userId, data.category, data.date, function (result) {
+        response.tell(result)
+      })
+    }
+  }
 
-            data.category = session.attributes.category;
-            data.date = session.attributes.date; 
-        }
+  intentHandlers.CancelExpenditureIntent = function (intent, session, response) {
+    var userId = session.user.userId
+    var data = {}
+    if (session.new === true) {
+      data.category = intent.slots.category.value
+      data.date = intent.slots.date.value
+    } else {
+      data.category = session.attributes.category
+      data.date = session.attributes.date
+    }
 
-        data.amount = intent.slots.amount.value;
-        if(!(data.amount)){
-            session.attributes.category = data.category;
-            session.attributes.date = data.date;
-            var speechOutput = textHelper.specifyAmount;
-            var repromptText = textHelper.specifyAmountReprompt;
-            response.ask(speechOutput,repromptText);
-            return;
-        }else{
-            data.amount = parseInt(data.amount,10);
-            data.amount *= -1; 
-            storage.saveExpense(user_id,data,response);
-        }    
-    };
-    
-    intentHandlers.CancelExpenditureImmediate = function (intent, session, response) {
-    	if(session.new == false){
+    data.amount = intent.slots.amount.value
+    if (!(data.amount)) {
+      session.attributes.category = data.category
+      session.attributes.date = data.date
+      var speechOutput = textHelper.specifyAmount
+      var repromptText = textHelper.specifyAmountReprompt
+      response.ask(speechOutput, repromptText)
+      return
+    } else {
+      data.amount = parseInt(data.amount, 10)
+      data.amount *= -1
+      storage.saveExpense(userId, data, response)
+    }
+  }
 
-    		response.tell(textHelper.cannotCancel);
-    	
-    	}else{
+  intentHandlers.CancelExpenditureImmediate = function (intent, session, response) {
+    if (session.new === false) {
+      response.tell(textHelper.cannotCancel)
+    } else {
+      session.attributes.deleteLast = true
+      response.ask(textHelper.confirmCancellation)
+      return
+    }
+  }
 
-    		session.attributes.deleteLast = true;
-    		response.ask(textHelper.confirmCancellation);
-    		return;
-    	}
-    };
-    
-    intentHandlers.SetBudgetIntent = function (intent, session, response) {
+  intentHandlers.SetBudgetIntent = function (intent, session, response) {
+    var userId = session.user.userId
+    var data = {}
+    data.category = intent.slots.category.value
+    data.date = intent.slots.date.value
 
-        var user_id = session.user.userId;
-        var data = {};
-        data.category = intent.slots.category.value;
-        data.date = intent.slots.date.value;
- 
+    data.amount = intent.slots.amount.value
 
-        data.amount = intent.slots.amount.value;
+    if (!(data.amount)) {
+      var speechOutput = textHelper.specifyBudgetAmount + textHelper.setBudgetHelp
+      response.tell(speechOutput)
+      return
+    } else {
+      if (!(data.category)) {
+        storage.setOverallBudget(userId, data, response)
+      } else {
+        storage.setCategoryBudget(userId, data, response)
+      }
+    }
+  }
 
-        if(!(data.amount)){
-            var speechOutput = textHelper.specifyBudgetAmount+textHelper.setBudgetHelp;
-            response.tell(speechOutput);
-            return;
-        }else{
-            if (!(data.category))
-                storage.setOverallBudget(user_id,data,response);
-            else
-                storage.setCategoryBudget(user_id,data,response);
-        }
-    };
-    
-    intentHandlers.ListAllCategoriesIntent = function (intent, session, response) {
-        storage.getCategories(response);
-    };
-    intentHandlers.ListAllExpensesIntent = function (intent, session, response) {
-        storage.listExpenses(session.user.userId,intent.slots.date.value,response);
-    };
-    intentHandlers.OverspendIntent = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
-    };
-    
-    intentHandlers.OverspendMonth = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
-    };
-    
-    intentHandlers.OverspendCategory = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
-    };
-    
-    intentHandlers.MostSpendingsMonth = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
-    };
-    
-    intentHandlers.LeastSpendingsMonth = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
-    };
-    
-    intentHandlers.MostSpendingsCategory = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
-    };
-    
-    intentHandlers.LeastSpendingsCategory = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
-    };
-    
-    intentHandlers['AMAZON.HelpIntent'] = function (intent, session, response) {
-        var speechOutput = textHelper.helpText + textHelper.examplesText,
-            repromptText = 'What do you want to do ?';
-        response.ask(speechOutput, repromptText);
-    };
-    
-    intentHandlers['AMAZON.RepeatIntent'] = function (intent, session, response) {
-        response.ask("help", "help");
-    };
-    
-    intentHandlers['AMAZON.YesIntent'] = function (intent, session, response) {
-    	if(session.attributes.deleteLast == true)
-    		storage.cancelLastExpense(session.user.userId,response);
-    };
-    
-    intentHandlers['AMAZON.NoIntent'] = function (intent, session, response) {
-    	if(session.attributes.deleteLast == true)
-    		response.tell(textHelper.dontCancel);
-    };
-    
-    intentHandlers['AMAZON.CancelIntent'] = function (intent, session, response) {
-        response.ask("help", "help");
-    };
-    
-    intentHandlers['AMAZON.StopIntent'] = function (intent, session, response) {
-        response.ask("help", "help");
-    };
-};
-exports.register = registerIntentHandlers;
+  intentHandlers.ListAllCategoriesIntent = function (intent, session, response) {
+    storage.getCategories(response)
+  }
+  intentHandlers.ListAllExpensesIntent = function (intent, session, response) {
+    storage.listExpenses(session.user.userId, intent.slots.date.value, response)
+  }
+  intentHandlers.OverspendIntent = function (intent, session, response) {
+    response.tellWithCard('Expense', 'Expense', 'Expense')
+  }
+
+  intentHandlers.OverspendMonth = function (intent, session, response) {
+    response.tellWithCard('Expense', 'Expense', 'Expense')
+  }
+
+  intentHandlers.OverspendCategory = function (intent, session, response) {
+    response.tellWithCard('Expense', 'Expense', 'Expense')
+  }
+
+  intentHandlers.MostSpendingsMonth = function (intent, session, response) {
+    response.tellWithCard('Expense', 'Expense', 'Expense')
+  }
+
+  intentHandlers.LeastSpendingsMonth = function (intent, session, response) {
+    response.tellWithCard('Expense', 'Expense', 'Expense')
+  }
+
+  intentHandlers.MostSpendingsCategory = function (intent, session, response) {
+    response.tellWithCard('Expense', 'Expense', 'Expense')
+  }
+
+  intentHandlers.LeastSpendingsCategory = function (intent, session, response) {
+    response.tellWithCard('Expense', 'Expense', 'Expense')
+  }
+
+  intentHandlers['AMAZON.HelpIntent'] = function (intent, session, response) {
+    var speechOutput = textHelper.helpText + textHelper.examplesText
+    var repromptText = 'What do you want to do ?'
+    response.ask(speechOutput, repromptText)
+  }
+
+  intentHandlers['AMAZON.RepeatIntent'] = function (intent, session, response) {
+    response.ask('help', 'help')
+  }
+
+  intentHandlers['AMAZON.YesIntent'] = function (intent, session, response) {
+    if (session.attributes.deleteLast === true) {
+      storage.cancelLastExpense(session.user.userId, response)
+    }
+  }
+
+  intentHandlers['AMAZON.NoIntent'] = function (intent, session, response) {
+    if (session.attributes.deleteLast === true) {
+      response.tell(textHelper.dontCancel)
+    }
+  }
+
+  intentHandlers['AMAZON.CancelIntent'] = function (intent, session, response) {
+    response.ask('help', 'help')
+  }
+
+  intentHandlers['AMAZON.StopIntent'] = function (intent, session, response) {
+    response.ask('help', 'help')
+  }
+}
+exports.register = registerIntentHandlers
