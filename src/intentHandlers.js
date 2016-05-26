@@ -11,6 +11,32 @@
 'use strict'
 var textHelper = require('textHelper')
 var storage = require('storage')
+var AlexaSkill = require('./AlexaSkill')
+
+/**
+ * Date utilities
+ */
+
+Date.prototype.yyyymmdd = function () {
+  var yyyy = this.getFullYear().toString()
+  var mm = (this.getMonth() + 1).toString() // getMonth() is zero-based
+  var dd = this.getDate().toString()
+  return yyyy + '-' + (mm[1] ? mm : '0' + mm[0]) + '-' + (dd[1] ? dd : '0' + dd[0]) // padding
+}
+
+Date.prototype.yyyymmdddash = function () {
+  var yyyy = this.getFullYear().toString()
+  var mm = (this.getMonth() + 1).toString() // getMonth() is zero-based
+  var dd = this.getDate().toString()
+  return yyyy + (mm[1] ? mm : '0' + mm[0]) + (dd[1] ? dd : '0' + dd[0]) // padding
+}
+
+Date.prototype.mm = function () {
+  var mm = (this.getMonth() + 1).toString()
+  mm = mm[1] ? mm : '0' + mm[0]
+  return mm
+}
+
 var registerIntentHandlers = function (intentHandlers, skillContext) {
   intentHandlers.AddExpenseIntent = function (intent, session, response) {
     var userId = session.user.userId
@@ -42,6 +68,7 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     data.category = intent.slots.category.value
     var date = intent.slots.date.value
     var speechOutput
+    var speechText
     if (!date) {
       data.date = new Date()
     } else {
@@ -49,28 +76,42 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     }
 
     if (data.date.getDate() === 1 && data.date.getHours() === 0 && data.date.getMinutes() === 0 && data.date.getSeconds() === 0) {
-      var spentMonth = (data.date.getMonth() + 1) + ' ' + data.date.getFullYear()
       if (!(data.category)) {
         storage.getTotalExpenseByMonth(userId, data.date, function (result) {
-          speechOutput = 'You have spent ' + result + ' dollars on ' + spentMonth
+          speechText = 'You have spent ' + result + ' dollars on ' + '<say-as interpret-as = "date" format = "my">' + data.date.mm() + data.date.getFullYear() + ' </say-as>'
+          speechOutput = {
+            speech: '<speak>' + speechText + '</speak>',
+            type: AlexaSkill.speechOutputType.SSML
+          }
           response.tell(speechOutput)
         })
       } else {
         storage.getCategoryExpenseByMonth(userId, data.category, data.date, function (result) {
-          speechOutput = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + spentMonth
+          speechText = 'You have spent ' + result + ' dollars on ' + data.category + ' on  <say-as interpret-as = "date" format = "my">' + data.date.mm() + data.date.getFullYear() + ' </say-as>'
+          speechOutput = {
+            speech: '<speak>' + speechText + '</speak>',
+            type: AlexaSkill.speechOutputType.SSML
+          }
           response.tell(speechOutput)
         })
       }
     } else {
-      var spentDate = data.date.getDate() + ' ' + (data.date.getMonth() + 1) + ' ' + data.date.getFullYear()
       if (!(data.category)) {
         storage.getExpense(userId, data.date, function (result) {
-          speechOutput = 'You have spent ' + result + ' dollars on ' + spentDate
+          speechText = 'You have spent ' + result + ' dollars on ' + '<say-as interpret-as = "date">' + data.date.yyyymmdddash() + ' </say-as>'
+          speechOutput = {
+            speech: '<speak>' + speechText + '</speak>',
+            type: AlexaSkill.speechOutputType.SSML
+          }
           response.tell(speechOutput)
         })
       } else {
         storage.getExpenseByCategory(userId, data.category, data.date, function (result) {
-          speechOutput = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + spentDate
+          speechText = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + '<say-as interpret-as = "date">' + data.date.yyyymmdddash() + ' </say-as>'
+          speechOutput = {
+            speech: '<speak>' + speechText + '</speak>',
+            type: AlexaSkill.speechOutputType.SSML
+          }
           response.tell(speechOutput)
         })
       }
