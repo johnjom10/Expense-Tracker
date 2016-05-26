@@ -41,19 +41,39 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     var data = {}
     data.category = intent.slots.category.value
     var date = intent.slots.date.value
+    var speechOutput
     if (!date) {
       data.date = new Date()
     } else {
       data.date = new Date(date)
     }
-    if (!(data.category)) {
-      storage.getTotalExpenseByMonth(userId, data.date, function (result) {
-        response.tell(result)
-      })
+
+    if (data.date.getDate() === 1 && data.date.getHours() === 0 && data.date.getMinutes() === 0 && data.date.getSeconds() === 0) {
+      var spentMonth = (data.date.getMonth() + 1) + ' ' + data.date.getFullYear()
+      if (!(data.category)) {
+        storage.getTotalExpenseByMonth(userId, data.date, function (result) {
+          speechOutput = 'You have spent ' + result + ' dollars on ' + spentMonth
+          response.tell(speechOutput)
+        })
+      } else {
+        storage.getCategoryExpenseByMonth(userId, data.category, data.date, function (result) {
+          speechOutput = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + spentMonth
+          response.tell(speechOutput)
+        })
+      }
     } else {
-      storage.getCategoryExpenseByMonth(userId, data.category, data.date, function (result) {
-        response.tell(result)
-      })
+      var spentDate = data.date.getDate() + ' ' + (data.date.getMonth() + 1) + ' ' + data.date.getFullYear()
+      if (!(data.category)) {
+        storage.getExpense(userId, data.date, function (result) {
+          speechOutput = 'You have spent ' + result + ' dollars on ' + spentDate
+          response.tell(speechOutput)
+        })
+      } else {
+        storage.getExpenseByCategory(userId, data.category, data.date, function (result) {
+          speechOutput = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + spentDate
+          response.tell(speechOutput)
+        })
+      }
     }
   }
 
