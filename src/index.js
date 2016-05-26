@@ -8,13 +8,13 @@
     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
-'use strict';
+'use strict'
 var AlexaSkill = require('./AlexaSkill'),
-    eventHandlers = require('./eventHandlers'),
-    intentHandlers = require('./intentHandlers');
+  eventHandlers = require('./eventHandlers'),
+  intentHandlers = require('./intentHandlers')
 
-var APP_ID = 'amzn1.echo-sdk-ams.app.103d8034-2f37-45bb-8f93-74b6da6b664c';
-var skillContext = {};
+var APP_ID = 'amzn1.echo-sdk-ams.app.6a78e294-fb00-4ec2-9e76-f3fe7f66b2d6'
+var skillContext = {}
 
 /**
  * ExpenseTracker is a child of AlexaSkill.
@@ -23,21 +23,19 @@ var skillContext = {};
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
  */
 var ExpenseTracker = function () {
-    AlexaSkill.call(this, APP_ID);
-    skillContext.needMoreHelp = true;
-};
-
+  AlexaSkill.call(this, APP_ID)
+  skillContext.needMoreHelp = true
+}
 
 // Extend AlexaSkill
-ExpenseTracker.prototype = Object.create(AlexaSkill.prototype);
-ExpenseTracker.prototype.constructor = ExpenseTracker;
+ExpenseTracker.prototype = Object.create(AlexaSkill.prototype)
+ExpenseTracker.prototype.constructor = ExpenseTracker
 
-eventHandlers.register(ExpenseTracker.prototype.eventHandlers, skillContext);
-intentHandlers.register(ExpenseTracker.prototype.intentHandlers, skillContext);
+eventHandlers.register(ExpenseTracker.prototype.eventHandlers, skillContext)
+intentHandlers.register(ExpenseTracker.prototype.intentHandlers, skillContext)
 
 exports.handler = function (event, context) {
-    // Create an instance of the ExpenseTracker skill.
-    var expenseTracker = new ExpenseTracker();
-    expenseTracker.execute(event, context);
-};
-
+  // Create an instance of the ExpenseTracker skill.
+  var expenseTracker = new ExpenseTracker()
+  expenseTracker.execute(event, context)
+}
