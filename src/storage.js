@@ -12,6 +12,10 @@ var connection = mysql.createConnection({
     port     : 3306
 });
 
+/**
+ * Date utilities
+ */
+
 var monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
 
 Date.prototype.yyyymmdd = function() {
@@ -19,14 +23,20 @@ Date.prototype.yyyymmdd = function() {
    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
    var dd  = this.getDate().toString();
    return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]); // padding
-  };
+};
 
 Date.prototype.yyyymmdddash = function() {
    var yyyy = this.getFullYear().toString();
    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
    var dd  = this.getDate().toString();
    return yyyy  + (mm[1]?mm:"0"+mm[0])  + (dd[1]?dd:"0"+dd[0]); // padding
-  };
+};
+
+Date.prototype.mm = function() {
+    var mm = (this.getMonth()+1).toString();
+    mm = mm[1]?mm:"0"+mm[0];
+   return mm;
+};
 
 var storage = (function () {
     
@@ -94,8 +104,8 @@ var storage = (function () {
                 if(rows[0] !== undefined) {
                     data.category_id = rows[0].category_id;   
                     
-                } else {                    
-                    data.category_id = 1;
+                }else{                    
+                	data.category_id = 1;
                 }
 
                 var date;
@@ -109,19 +119,16 @@ var storage = (function () {
                     storage.getTotalBudget(user_id, date, function(monthlyBudget){
                         if(((parseFloat(monthlyExpense) + parseFloat(data.amount)) > monthlyBudget) && monthlyBudget != -1){
                             speechOutput += "Oops! Looks like you overspent this month.";
-                            console.log('overall'+monthlyExpense);
+                            console.log("Checking whether overall budget is exceeded...");
                             currentExpense = new Expense(user_id,data);
                             currentExpense.save(speechOutput, response);
-                        }
-                        else{
-
-                            storage.getExpenseByCategory(user_id, data.category, date, function(categoryExpense){
+                        }else{
+                        	storage.getExpenseByCategory(user_id, data.category, date, function(categoryExpense){
                                 storage.getCategoryBudget(user_id, data.category, date, function(categoryBudget){
                                     if(((parseFloat(categoryExpense) + parseFloat(data.amount)) > categoryBudget) && categoryBudget!=-1)
                                         speechOutput += "Oops! Looks like you overspent" + " on " + data.category + " this month.";
-                                        
-                                    
-                                    console.log('category'+monthlyExpense);
+                                   
+                            		console.log("Checking whether category-wise budget is exceeded...");
                                     currentExpense = new Expense(user_id,data);
                                     currentExpense.save(speechOutput, response);
                                 });
@@ -155,6 +162,7 @@ var storage = (function () {
                     console.log(err);
                     return;
                 }
+                
                 if (rows1.length == 0) {
                     query = "INSERT INTO overall_budget(amount, user_id, month) VALUES (?,?,?)";
                 }else{               
@@ -218,31 +226,28 @@ var storage = (function () {
                             return;
                         }
                     }
-                        	console.log('test');
-                        	query = "SELECT * FROM category_budget WHERE ( user_id = ? AND month = ? AND category_id = ? )";
-                        	connection.query(query, [user_id, formattedDate, data.category_id], function(err, rows3) {
-                            	if (err) {
-                                	console.log(err);
-                                	return;
-                            	}
-                            	console.log('insert or update');
-                            	if (rows3.length == 0) {
-                                	query = "INSERT INTO category_budget(amount, user_id,category_id, month) VALUES (?,?,?,?)";
-                            	}else{               
-                                	query = "UPDATE category_budget SET amount = ? WHERE ( user_id = ? AND category_id = ? AND month = ?)";
-                            	}
-                            	connection.query(query, [data.amount,user_id, data.category_id, formattedDate], function(err, rows4) {
-                                	if (err) {
-                                    	console.log(err);
-                                    	return;
-                                	}
-                                	console.log('budget');
-                                	var speechOutput = 'Budget of ' + data.category + ' for ' + monthNames[date.getMonth()] + ' set as ' + data.amount + ' dollars.';
-                                	response.tell(speechOutput);
-                                	return;
-                            	});
-                        	});
-                	
+                            query = "SELECT * FROM category_budget WHERE ( user_id = ? AND month = ? AND category_id = ? )";
+                            connection.query(query, [user_id, formattedDate, data.category_id], function(err, rows3) {
+                                if (err) {
+                                    console.log(err);
+                                    return;
+                                }
+                                if (rows3.length == 0) {
+                                    query = "INSERT INTO category_budget(amount, user_id,category_id, month) VALUES (?,?,?,?)";
+                                }else{               
+                                    query = "UPDATE category_budget SET amount = ? WHERE ( user_id = ? AND category_id = ? AND month = ?)";
+                                }
+                                connection.query(query, [data.amount,user_id, data.category_id, formattedDate], function(err, rows4) {
+                                    if (err) {
+                                        console.log(err);
+                                        return;
+                                    }
+                                    var speechOutput = 'Budget of ' + data.category + ' for ' + monthNames[date.getMonth()] + ' set as ' + data.amount + ' dollars.';
+                                    response.tell(speechOutput);
+                                    return;
+                                });
+                            });
+                    
                 });
             });
 
@@ -374,46 +379,169 @@ var storage = (function () {
                 });
         } ,      
         /**
+         * Get total expense of a user in a particular month
+         */
+        getTotalExpenseByMonth: function(user_id, date, callback){ 
+
+            var mm = date.mm();
+            var query = 'SELECT SUM(amount) FROM expenses WHERE user_id = ? AND MONTH(date) = ? AND YEAR(date) = ?';
+            connection.query(query, [user_id, mm, date.getFullYear()], function(err, expenditure) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(expenditure[0]['SUM(amount)']!=null)
+                    callback(expenditure[0]['SUM(amount)']);
+                else
+                    callback(0);
+            });
+        },
+        /**
+         * Get total expense of a user for a particular category in a particular month
+         */
+        getCategoryExpenseByMonth: function(user_id, category, date, callback){
+
+            connection.query('SELECT category_id FROM category WHERE category_name = ?',[category], function(err, cat_id) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(cat_id.length == 0){
+                    cat_id[0]={};
+                    cat_id[0].category_id = 1;
+                }
+
+                var mm = date.mm();
+                
+                var query = 'SELECT SUM(amount) FROM expenses  WHERE (user_id = ? AND category_id = ? AND MONTH(date) = ? AND YEAR(date) = ?)';
+                connection.query(query, [user_id, cat_id[0].category_id, mm, date.getFullYear()], function(err, expenditure) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if(expenditure[0]['SUM(amount)']!=null)
+                        callback(expenditure[0]['SUM(amount)']);
+                    else
+                        callback(0);
+                });
+            });
+        },  
+        /**
+         * Get total budget of a user for a month
+         */
+        getTotalBudget: function(user_id, date,callback){
+            
+            var mm = date.mm();
+
+            var query = 'SELECT amount FROM overall_budget WHERE user_id = ? AND MONTH(month) = ? AND YEAR(month) = ?';
+            connection.query(query, [user_id, mm, date.getFullYear()], function(err, budget){
+                if(err){
+                    console.log(err);
+                    return;
+                }
+                if (budget.length == 0){
+                    callback(-1);
+                }else{
+                    callback(budget[0].amount);
+                }
+            });
+        },              
+        /**
+         * Get category wise budget of a user for a month
+         */
+        getCategoryBudget: function(user_id, category, date, callback){
+            var mm = date.mm();
+
+            var query = 'SELECT amount FROM category_budget,category WHERE category.category_id = category_budget.category_id AND (user_id = ? AND category_name = ? AND MONTH(month) = ? AND YEAR(month) = ?)';
+            connection.query(query, [user_id, category, mm, date.getFullYear()], function(err, budget) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(budget.length == 0){
+                    callback(-1);
+                }else{
+                    callback(budget[0].amount);
+                }
+            });
+        }, 
+
+        /**
+         * Get total expense of a user for a given date
+         */
+        getExpense: function(user_id, date, callback){
+            var formattedDate = date.yyyymmdd();
+            var query = 'SELECT SUM(amount) FROM expenses WHERE user_id=? AND date = ?';
+            connection.query(query, [user_id, formattedDate], function(err, expenditure) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(expenditure[0]['SUM(amount)']==null)
+                    callback(0);
+                else
+                    callback(expenditure[0]['SUM(amount)']);
+            });
+        },
+        
+        /**
+         * Get total expense of a user for a particular category on a given date
+         */
+        getExpenseByCategory: function(user_id, category, date, callback){
+            var formattedDate = date.yyyymmdd();
+            var query = 'SELECT SUM(amount) FROM expenses,category WHERE expenses.category_id = category.category_id AND user_id = ? AND category_name = ? AND date = ?';
+            connection.query(query, [user_id, category, formattedDate], function(err, expenditure) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(expenditure[0]['SUM(amount)']==null)
+                    callback(0);
+                else
+                    callback(expenditure[0]['SUM(amount)']);
+                });
+        } ,      
+        /**
          * Collects all expenses for the specified date
          */
         listExpenses : function(user_id,date,response){
-        	var formattedDate;
-        	var temp;
-        	var speechText;
-        	if(!date){
-        		temp = new Date();
-        		formattedDate = temp.yyyymmdd();
-        	}else{
-        		temp = new Date(date);
-        		formattedDate = temp.yyyymmdd();
-        	}
+            var formattedDate;
+            var temp;
+            var speechText;
+            if(!date){
+                temp = new Date();
+                formattedDate = temp.yyyymmdd();
+            }else{
+                temp = new Date(date);
+                formattedDate = temp.yyyymmdd();
+            }
 
             var query = 'SELECT SUM(amount),category_name FROM expenses,category WHERE ( ( expenses.category_id = category.category_id ) AND date = ? AND user_id = ?) GROUP BY category_name';
             connection.query(query, [formattedDate, user_id], function(err, rows) {
-            	if (err) {
+                if (err) {
                     console.log(err);
                     return;
                 }
                 console.log('Expenses');
 
                 if (rows.length == 0) {
-					speechText = 'No Expenses on <say-as interpret-as = \"date\">' + temp.yyyymmdddash() + ' </say-as>';
+                    speechText = 'No Expenses on <say-as interpret-as = \"date\">' + temp.yyyymmdddash() + ' </say-as>';
 
                 }else{
-                	speechText = "Expenses on <say-as interpret-as = \"date\">" + temp.yyyymmdddash() + " </say-as>";
-                	console.log(rows);
-                	for (var i = 0;i < rows.length ; i++){
-                		if(parseFloat((rows[i]["SUM(amount)"])) > 0){
-                			speechText += '<s>' + rows[i]["SUM(amount)"] + ' dollars on ' + rows[i].category_name + '</s>'; 
-                		}
-                	}
-    			}
-    			var speechOutput = {
-        			speech: '<speak>' + speechText + '</speak>',
-        			type: AlexaSkill.speechOutputType.SSML
-    			};
-            	response.tell(speechOutput);
-            	return;
+                    speechText = "Expenses on <say-as interpret-as = \"date\">" + temp.yyyymmdddash() + " </say-as>";
+                    console.log(rows);
+                    for (var i = 0;i < rows.length ; i++){
+                        if(parseFloat((rows[i]["SUM(amount)"])) > 0){
+                            speechText += '<s>' + rows[i]["SUM(amount)"] + ' dollars on ' + rows[i].category_name + '</s>'; 
+                        }
+                    }
+                }
+                var speechOutput = {
+                    speech: '<speak>' + speechText + '</speak>',
+                    type: AlexaSkill.speechOutputType.SSML
+                };
+                response.tell(speechOutput);
+                return;
             });
 
         },
