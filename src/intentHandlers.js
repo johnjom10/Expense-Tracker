@@ -142,13 +142,36 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     };
     
     intentHandlers.MostSpendingsMonth = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
+      var user_id = session.user.userId;
+      var data = {};
+     
+            if(!intent.slots.category.value)
+               { data.category = "";
+                 data.date = new Date(); 
+            }
+            else
+               { data.category = intent.slots.category.value;
+                 data.date = new Date(); 
+               }
+       storage.mostSpentMonth(user_id,data,response);
+  
     };
     
     intentHandlers.LeastSpendingsMonth = function (intent, session, response) {
-        response.tellWithCard("Expense", "Expense", "Expense");
+      var user_id = session.user.userId;
+      var data = {};
+     
+            if(!intent.slots.category.value)
+               { data.category = "";
+                 data.date = new Date(); 
+            }
+            else
+               { data.category = intent.slots.category.value;
+                 data.date = new Date(); 
+               }
+       storage.leastSpentMonth(user_id,data,response);
+  
     };
-    
     intentHandlers.MostSpendingsCategory = function (intent, session, response) {
       var user_id = session.user.userId;
       var data = {};

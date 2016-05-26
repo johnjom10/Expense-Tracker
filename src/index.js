@@ -13,7 +13,7 @@ var AlexaSkill = require('./AlexaSkill'),
     eventHandlers = require('./eventHandlers'),
     intentHandlers = require('./intentHandlers');
 
-var APP_ID = 'amzn1.echo-sdk-ams.app.6a78e294-fb00-4ec2-9e76-f3fe7f66b2d6';
+var APP_ID = 'amzn1.echo-sdk-ams.app.103d8034-2f37-45bb-8f93-74b6da6b664c';
 var skillContext = {};
 
 /**

@@ -450,7 +450,7 @@ var storage = (function () {
                          }   
                      }
                            
-                    var  speechOutput = "You spent most on  " + data.mostcategory + " for an amount of  " +data.mostvalue ; 
+                    var  speechOutput = "You spent most on  " + data.mostcategory + " for an amount of  " +data.mostvalue + " dollars ."; 
                     response.tell(speechOutput);
                 }
 
@@ -496,16 +496,120 @@ var storage = (function () {
                          }   
                      }
                  
-                     var  speechOutput = "You spent least on  " + data.leastcategory + " for an amount of  " +data.leastvalue ; 
+                     var  speechOutput = "You spent least on  " + data.leastcategory + " for an amount of  " +data.leastvalue + " dollars ." ; 
                      response.tell(speechOutput);
                  }
             }
         });
 
         },
+
+         mostSpentMonth : function (user_id,data,response){
+         if(data.category != ""){
+         var query = 'SELECT max,monthid FROM (SELECT SUM(expenses.amount) as max,MONTH(date) as monthid  FROM expenses,category WHERE expenses.category_id = category.category_id AND user_id = ? AND year(date) = ? AND category.category_name = ? GROUP BY MONTH(date)) as result ORDER BY result.max DESC';
+         connection.query(query,[user_id,data.date.getFullYear(),data.category],function(err,rows){
+             if(err){
+               console.log(err);   	
+             }else{
+	            	if(rows[0]==null){
+	            		var	speechOutput = "You have not spend anything so far for "+data.category + " this year .";
+	            	    response.tell(speechOutput); 
+	            	}
+	            	else{
+	            		var speechOutput = "You have spent the most during " + monthNames[rows[0]['monthid']-1] + " for an amount of " + rows[0]['max'] + " dollars .";
+	            		response.tell(speechOutput);
+	            	}
+
+                 }  
+
+            })     
+
+
+         }
+
+
+         else {
+         	var query = 'SELECT max,monthid from (SELECT SUM(amount) as max ,MONTH(date) as monthid  from expenses WHERE user_id = ? AND YEAR(date) = ? GROUP BY MONTH(date)) as result ORDER BY result.max DESC ';
+            connection.query(query,[user_id,data.date.getFullYear()],function(err,rows){
+            	if(err){
+            		console.log(err);
+            	}
+            	else{
+	            	if(rows[0]==null){
+	            		var	speechOutput = "You have not spend anything so far this year";
+	            	    response.tell(speechOutput); 
+	            	}
+	            	else{
+	            		var speechOutput = "You have spent the most during " + monthNames[rows[0]['monthid']-1] + " for an amount of " + rows[0]['max'] + " dollars .";
+	            		response.tell(speechOutput);
+	            	}
+
+                 }
+
+             })
+        }
+
+    },
+
+
+   leastSpentMonth : function (user_id,data,response){
+         if(data.category != ""){
+         var query = 'SELECT min,monthid FROM (SELECT SUM(expenses.amount) as min,MONTH(date) as monthid  FROM expenses,category WHERE expenses.category_id = category.category_id AND user_id = ? AND year(date) = ? AND category.category_name = ? GROUP BY MONTH(date)) as result ORDER BY result.min ASC';
+         connection.query(query,[user_id,data.date.getFullYear(),data.category],function(err,rows){
+             if(err){
+               console.log(err);   	
+             }else{
+	            	if(rows[0]==null ){
+	            		var	speechOutput = "You have not spend anything so far for "+data.category + " this year .";
+	            	    response.tell(speechOutput); 
+	            	}
+	            	else{
+	            		var speechOutput = "You have spent the least during " + monthNames[rows[0]['monthid']-1] + " for an amount of " + rows[0]['min'] + " dollars . ";
+	            		response.tell(speechOutput);
+	            	}
+
+                 }  
+
+            })     
+
+
+         }
+
+
+         else {
+         	var query = 'SELECT min,monthid from (SELECT SUM(amount) as min ,MONTH(date) as monthid  from expenses WHERE user_id = ? AND YEAR(date) = ? GROUP BY MONTH(date)) as result ORDER BY result.min ASC ';
+            connection.query(query,[user_id,data.date.getFullYear()],function(err,rows){
+            	if(err){
+            		console.log(err);
+            	}
+            	else{
+	            	if(rows[0]==null){
+	            		var	speechOutput = "You have not spend anything so far this year";
+	            	    response.tell(speechOutput); 
+	            	}
+	            	else{
+	            		var speechOutput = "You have spent the least during " + monthNames[rows[0]['monthid']-1] + " for an amount of " + rows[0]['min'] + "dollars";
+	            		response.tell(speechOutput);
+	            	}
+
+                 }
+
+             })
+        }
+
+    },
+
+
+
+
         /**
          * Deletes the last entry in the expenses table for the specified user
          */
+
+
+        
+
+
         cancelLastExpense: function (user_id,response) {
             var query = "DELETE FROM expenses WHERE user_id = ? ORDER BY id DESC LIMIT 1";
             
