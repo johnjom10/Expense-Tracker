@@ -194,19 +194,55 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
   }
 
   intentHandlers.MostSpendingsMonth = function (intent, session, response) {
-    response.tellWithCard('Expense', 'Expense', 'Expense')
+    var userId = session.user.userId
+    var data = {}
+
+    if (!intent.slots.category.value) {
+      data.category = ''
+      data.date = new Date()
+    } else {
+      data.category = intent.slots.category.value
+      data.date = new Date()
+    }
+
+    storage.mostSpentMonth(userId, data, response)
   }
 
   intentHandlers.LeastSpendingsMonth = function (intent, session, response) {
-    response.tellWithCard('Expense', 'Expense', 'Expense')
-  }
+    var userId = session.user.userId
+    var data = {}
 
+    if (!intent.slots.category.value) {
+      data.category = ''
+      data.date = new Date()
+    } else {
+      data.category = intent.slots.category.value
+      data.date = new Date()
+    }
+    storage.leastSpentMonth(userId, data, response)
+  }
   intentHandlers.MostSpendingsCategory = function (intent, session, response) {
-    response.tellWithCard('Expense', 'Expense', 'Expense')
+    var userId = session.user.userId
+    var data = {}
+
+    if (!intent.slots.date.value) {
+      data.date = new Date()
+    } else {
+      data.date = new Date(intent.slots.date.value)
+    }
+    storage.spentMostOn(userId, data, response)
   }
 
   intentHandlers.LeastSpendingsCategory = function (intent, session, response) {
-    response.tellWithCard('Expense', 'Expense', 'Expense')
+    var userId = session.user.userId
+    var data = {}
+
+    if (!intent.slots.date.value) {
+      data.date = new Date()
+    } else {
+      data.date = new Date(intent.slots.date.value)
+    }
+    storage.spentLeastOn(userId, data, response)
   }
 
   intentHandlers['AMAZON.HelpIntent'] = function (intent, session, response) {
