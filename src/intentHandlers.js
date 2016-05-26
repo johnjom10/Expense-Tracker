@@ -49,15 +49,36 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
         }else{
             data.date = new Date(date);
         }
-        if(!(data.category)){
-            storage.getTotalExpenseByMonth(user_id, data.date,function(result){
-                response.tell(result);
-            });
+
+        if (data.date.getDate()==1 && data.date.getHours()==0 && data.date.getMinutes()==0 && data.date.getSeconds()==0){
+            var spentMonth = (data.date.getMonth() + 1)+' '+data.date.getFullYear();
+            if(!(data.category)){
+                storage.getTotalExpenseByMonth(user_id, data.date,function(result){
+                    speechOutput = 'You have spent '+result+' dollars on '+spentMonth;
+                    response.tell(speechOutput);
+                });
+            }
+            else{
+                storage.getCategoryExpenseByMonth(user_id, data.category, data.date, function(result){
+                    speechOutput = 'You have spent '+result+' dollars on '+data.category+' on '+spentMonth;
+                    response.tell(speechOutput);
+                });
+            }
         }
         else{
-            storage.getCategoryExpenseByMonth(user_id, data.category, data.date, function(result){
-                response.tell(result);
-            });
+            var spentDate = data.date.getDate()+' '+(data.date.getMonth() + 1)+' '+data.date.getFullYear();
+            if(!(data.category)){
+                storage.getExpense(user_id, data.date, function(result){
+                    speechOutput = 'You have spent '+result+' dollars on '+spentDate;
+                    response.tell(speechOutput);
+                });
+            }
+            else{
+                storage.getExpenseByCategory(user_id, data.category, data.date, function(result){
+                    speechOutput = 'You have spent '+result+' dollars on '+data.category+' on '+spentDate;
+                    response.tell(speechOutput);
+                });
+            }
         }
     };
     
