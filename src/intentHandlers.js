@@ -9,17 +9,43 @@
 */
 
 'use strict'
-var textHelper = require('textHelper'),
-  storage = require('storage')
+var textHelper = require('textHelper')
+var storage = require('storage')
+var AlexaSkill = require('./AlexaSkill')
+
+/**
+ * Date utilities
+ */
+
+Date.prototype.yyyymmdd = function () {
+  var yyyy = this.getFullYear().toString()
+  var mm = (this.getMonth() + 1).toString() // getMonth() is zero-based
+  var dd = this.getDate().toString()
+  return yyyy + '-' + (mm[1] ? mm : '0' + mm[0]) + '-' + (dd[1] ? dd : '0' + dd[0]) // padding
+}
+
+Date.prototype.yyyymmdddash = function () {
+  var yyyy = this.getFullYear().toString()
+  var mm = (this.getMonth() + 1).toString() // getMonth() is zero-based
+  var dd = this.getDate().toString()
+  return yyyy + (mm[1] ? mm : '0' + mm[0]) + (dd[1] ? dd : '0' + dd[0]) // padding
+}
+
+Date.prototype.mm = function () {
+  var mm = (this.getMonth() + 1).toString()
+  mm = mm[1] ? mm : '0' + mm[0]
+  return mm
+}
+
 var registerIntentHandlers = function (intentHandlers, skillContext) {
   intentHandlers.AddExpenseIntent = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
     var email = session.user.accessToken
-    if (session.new == true) {
+    if (session.new === true) {
       data.category = intent.slots.category.value
       data.date = intent.slots.date.value
-    }else {
+    } else {
       data.category = session.attributes.category
       data.date = session.attributes.date
     }
@@ -32,48 +58,63 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
       var repromptText = textHelper.specifyAmountReprompt
       response.ask(speechOutput, repromptText)
       return
-    }else {
-      storage.addUser(user_id, email, function () {
-        storage.saveExpense(user_id, email, data, response)
+    } else {
+      storage.addUser(userId, email, function () {
+        storage.saveExpense(userId, email, data, response)
       })
     }
   }
 
   intentHandlers.GiveSpendingHabitsIntent = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
     data.category = intent.slots.category.value
     var date = intent.slots.date.value
     var speechOutput
+    var speechText
     if (!date) {
       data.date = new Date()
-    }else {
+    } else {
       data.date = new Date(date)
     }
 
-    if (data.date.getDate() == 1 && data.date.getHours() == 0 && data.date.getMinutes() == 0 && data.date.getSeconds() == 0) {
-      var spentMonth = (data.date.getMonth() + 1) + ' ' + data.date.getFullYear()
+    if (data.date.getDate() === 1 && data.date.getHours() === 0 && data.date.getMinutes() === 0 && data.date.getSeconds() === 0) {
       if (!(data.category)) {
-        storage.getTotalExpenseByMonth(user_id, data.date, function (result) {
-          speechOutput = 'You have spent ' + result + ' dollars on ' + spentMonth
+        storage.getTotalExpenseByMonth(userId, data.date, function (result) {
+          speechText = 'You have spent ' + result + ' dollars on ' + '<say-as interpret-as = "date" format = "my">' + data.date.mm() + data.date.getFullYear() + ' </say-as>'
+          speechOutput = {
+            speech: '<speak>' + speechText + '</speak>',
+            type: AlexaSkill.speechOutputType.SSML
+          }
           response.tell(speechOutput)
         })
-      }else {
-        storage.getCategoryExpenseByMonth(user_id, data.category, data.date, function (result) {
-          speechOutput = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + spentMonth
+      } else {
+        storage.getCategoryExpenseByMonth(userId, data.category, data.date, function (result) {
+          speechText = 'You have spent ' + result + ' dollars on ' + data.category + ' on  <say-as interpret-as = "date" format = "my">' + data.date.mm() + data.date.getFullYear() + ' </say-as>'
+          speechOutput = {
+            speech: '<speak>' + speechText + '</speak>',
+            type: AlexaSkill.speechOutputType.SSML
+          }
           response.tell(speechOutput)
         })
       }
-    }else {
-      var spentDate = data.date.getDate() + ' ' + (data.date.getMonth() + 1) + ' ' + data.date.getFullYear()
+    } else {
       if (!(data.category)) {
-        storage.getExpense(user_id, data.date, function (result) {
-          speechOutput = 'You have spent ' + result + ' dollars on ' + spentDate
+        storage.getExpense(userId, data.date, function (result) {
+          speechText = 'You have spent ' + result + ' dollars on ' + '<say-as interpret-as = "date">' + data.date.yyyymmdddash() + ' </say-as>'
+          speechOutput = {
+            speech: '<speak>' + speechText + '</speak>',
+            type: AlexaSkill.speechOutputType.SSML
+          }
           response.tell(speechOutput)
         })
-      }else {
-        storage.getExpenseByCategory(user_id, data.category, data.date, function (result) {
-          speechOutput = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + spentDate
+      } else {
+        storage.getExpenseByCategory(userId, data.category, data.date, function (result) {
+          speechText = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + '<say-as interpret-as = "date">' + data.date.yyyymmdddash() + ' </say-as>'
+          speechOutput = {
+            speech: '<speak>' + speechText + '</speak>',
+            type: AlexaSkill.speechOutputType.SSML
+          }
           response.tell(speechOutput)
         })
       }
@@ -81,12 +122,13 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
   }
 
   intentHandlers.CancelExpenditureIntent = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
-    if (session.new == true) {
+    var email = session.user.accessToken
+    if (session.new === true) {
       data.category = intent.slots.category.value
       data.date = intent.slots.date.value
-    }else {
+    } else {
       data.category = session.attributes.category
       data.date = session.attributes.date
     }
@@ -99,21 +141,19 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
       var repromptText = textHelper.specifyAmountReprompt
       response.ask(speechOutput, repromptText)
       return
-    }else {
+    } else {
       data.amount = parseInt(data.amount, 10)
       data.amount *= -1
-      console.log('adding')
-      storage.addUser(user_id, email, function () {
-        console.log(email)
-        storage.saveExpense(user_id, email, data, response)
+      storage.addUser(userId, email, function () {
+        storage.saveExpense(userId, email, data, response)
       })
     }
   }
 
   intentHandlers.CancelExpenditureImmediate = function (intent, session, response) {
-    if (session.new == false) {
+    if (session.new === false) {
       response.tell(textHelper.cannotCancel)
-    }else {
+    } else {
       session.attributes.deleteLast = true
       response.ask(textHelper.confirmCancellation)
       return
@@ -121,7 +161,7 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
   }
 
   intentHandlers.SetBudgetIntent = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
     data.category = intent.slots.category.value
     data.date = intent.slots.date.value
@@ -132,11 +172,12 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
       var speechOutput = textHelper.specifyBudgetAmount + textHelper.setBudgetHelp
       response.tell(speechOutput)
       return
-    }else {
-      if (!(data.category))
-        storage.setOverallBudget(user_id, data, response)
-      else
-        storage.setCategoryBudget(user_id, data, response)
+    } else {
+      if (!(data.category)) {
+        storage.setOverallBudget(userId, data, response)
+      } else {
+        storage.setCategoryBudget(userId, data, response)
+      }
     }
   }
 
@@ -147,7 +188,7 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     storage.listExpenses(session.user.userId, intent.slots.date.value, response)
   }
   intentHandlers.OverspendIntent = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
     data.category = intent.slots.category.value
     var date = intent.slots.date.value
@@ -155,39 +196,38 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
 
     if (!date) {
       data.date = new Date()
-    }else {
+    } else {
       data.date = new Date(date)
     }
 
     if (!(data.category)) {
-      storage.getTotalBudget(user_id, data.date, function (result) {
-        if (result == -1) {
+      storage.getTotalBudget(userId, data.date, function (result) {
+        if (result === -1) {
           speechOutput = 'You have not set a budget for this month'
           response.tell(speechOutput)
-        }else {
-          // var b = result
-          storage.getTotalExpenseByMonth(user_id, data.date, function (exp) {
+        } else {
+          storage.getTotalExpenseByMonth(userId, data.date, function (exp) {
             if (parseFloat(exp) > parseFloat(result)) {
               speechOutput = 'You have exceeded your budget for this month.'
               response.tell(speechOutput)
-            }else {
+            } else {
               speechOutput = 'You have not exceeded your budget for this month.'
               response.tell(speechOutput)
             }
           })
         }
       })
-    }else {
-      storage.getCategoryBudget(user_id, data.category, data.date, function (result) {
-        if (result == -1) {
+    } else {
+      storage.getCategoryBudget(userId, data.category, data.date, function (result) {
+        if (result === -1) {
           speechOutput = 'You have not set a budget for this category'
           response.tell(speechOutput)
-        }else {
-          storage.getExpenseByCategory(user_id, data.category, data.date, function (exp) {
+        } else {
+          storage.getExpenseByCategory(userId, data.category, data.date, function (exp) {
             if (parseFloat(exp) > parseFloat(result)) {
               speechOutput = 'You have exceeded your category budget for this month.'
               response.tell(speechOutput)
-            }else {
+            } else {
               speechOutput = 'You have not exceeded your category budget for this month.'
               response.tell(speechOutput)
             }
@@ -198,73 +238,84 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
   }
 
   intentHandlers.OverspendMonth = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
     data.category = intent.slots.category.value
-    var speechOutput
     var date = new Date()
     if (!data.category) {
-      storage.OverallOverSpentMonth(user_id, date, response)
-    }else {
-      storage.CategoryOverSpentMonth(user_id, data.category, date, response)
+      storage.OverallOverSpentMonth(userId, date, response)
+    } else {
+      storage.CategoryOverSpentMonth(userId, data.category, date, response)
     }
   }
 
   intentHandlers.OverspendCategory = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
     var date = intent.slots.date.value
-    var speechOutput
     if (!date) {
       data.date = new Date()
-    }else {
+    } else {
       data.date = new Date(date)
     }
-    storage.overSpentCategory(user_id, data.date, response)
+    storage.overSpentCategory(userId, data.date, response)
   }
 
   intentHandlers.MostSpendingsMonth = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
 
-    if (!intent.slots.category.value) { data.category = ''
+    if (!intent.slots.category.value) {
+      data.category = ''
       data.date = new Date()
-    }else { data.category = intent.slots.category.value
+    } else {
+      data.category = intent.slots.category.value
       data.date = new Date()
     }
-    storage.mostSpentMonth(user_id, data, response)
+
+    storage.mostSpentMonth(userId, data, response)
   }
 
   intentHandlers.LeastSpendingsMonth = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
 
-    if (!intent.slots.category.value) { data.category = ''
+    if (!intent.slots.category.value) {
+      data.category = ''
       data.date = new Date()
-    }else { data.category = intent.slots.category.value
+    } else {
+      data.category = intent.slots.category.value
       data.date = new Date()
     }
-    storage.leastSpentMonth(user_id, data, response)
+    storage.leastSpentMonth(userId, data, response)
   }
   intentHandlers.MostSpendingsCategory = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
 
-    if (!intent.slots.date.value) { data.date = new Date();}else { data.date = new Date(intent.slots.date.value);}
-    storage.spentMostOn(user_id, data, response)
+    if (!intent.slots.date.value) {
+      data.date = new Date()
+    } else {
+      data.date = new Date(intent.slots.date.value)
+    }
+    storage.spentMostOn(userId, data, response)
   }
 
   intentHandlers.LeastSpendingsCategory = function (intent, session, response) {
-    var user_id = session.user.userId
+    var userId = session.user.userId
     var data = {}
 
-    if (!intent.slots.date.value) { data.date = new Date();}else { data.date = new Date(intent.slots.date.value);}
-    storage.spentLeastOn(user_id, data, response)
+    if (!intent.slots.date.value) {
+      data.date = new Date()
+    } else {
+      data.date = new Date(intent.slots.date.value)
+    }
+    storage.spentLeastOn(userId, data, response)
   }
 
   intentHandlers['AMAZON.HelpIntent'] = function (intent, session, response) {
-    var speechOutput = textHelper.helpText + textHelper.examplesText,
-      repromptText = 'What do you want to do ?'
+    var speechOutput = textHelper.helpText + textHelper.examplesText
+    var repromptText = 'What do you want to do ?'
     response.ask(speechOutput, repromptText)
   }
 
@@ -273,13 +324,15 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
   }
 
   intentHandlers['AMAZON.YesIntent'] = function (intent, session, response) {
-    if (session.attributes.deleteLast == true)
+    if (session.attributes.deleteLast === true) {
       storage.cancelLastExpense(session.user.userId, response)
+    }
   }
 
   intentHandlers['AMAZON.NoIntent'] = function (intent, session, response) {
-    if (session.attributes.deleteLast == true)
+    if (session.attributes.deleteLast === true) {
       response.tell(textHelper.dontCancel)
+    }
   }
 
   intentHandlers['AMAZON.CancelIntent'] = function (intent, session, response) {

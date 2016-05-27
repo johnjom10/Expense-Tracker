@@ -56,9 +56,9 @@ AlexaSkill.prototype.eventHandlers = {
    * Called when the user specifies an intent.
    */
   onIntent: function (intentRequest, session, response) {
-    var intent = intentRequest.intent,
-      intentName = intentRequest.intent.name,
-      intentHandler = this.intentHandlers[intentName]
+    var intent = intentRequest.intent
+    var intentName = intentRequest.intent.name
+    var intentHandler = this.intentHandlers[intentName]
     if (intentHandler) {
       console.log('dispatch intent = ' + intentName)
       intentHandler.call(this, intent, session, response)
@@ -85,8 +85,7 @@ AlexaSkill.prototype.execute = function (event, context) {
 
     // Validate that this request originated from authorized source.
     if (this._appId && event.session.application.applicationId !== this._appId) {
-      console.log("The applicationIds don't match : " + event.session.application.applicationId + ' and '
-        + this._appId)
+      console.log("The applicationIds don't match : " + event.session.application.applicationId + ' and ' + this._appId)
       throw 'Invalid applicationId'
     }
 
