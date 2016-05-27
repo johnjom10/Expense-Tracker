@@ -34,7 +34,7 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
       return
     }else {
       storage.addUser(user_id, email, function () {
-        storage.saveExpense(user_id, data, response)
+        storage.saveExpense(user_id, email, data, response)
       })
     }
   }
@@ -105,7 +105,7 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
       console.log('adding')
       storage.addUser(user_id, email, function () {
         console.log(email)
-        storage.saveExpense(user_id, data, response)
+        storage.saveExpense(user_id, email, data, response)
       })
     }
   }

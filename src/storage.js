@@ -39,7 +39,7 @@ Date.prototype.mm = function () {
 }
 
 var storage = (function () {
-  function Expense (user_id, data) {
+  function Expense (user_id, email, data) {
     if (data) {
       this.data = data
     } else {
@@ -50,6 +50,8 @@ var storage = (function () {
       }
     }
     this.user_id = user_id
+    this.email = email
+    console.log('email1' + this.email)
   }
 
   Expense.prototype = {
@@ -66,7 +68,7 @@ var storage = (function () {
 
       var query = 'INSERT INTO expenses(user_id,category_id, amount, date) VALUES (?,?,?,?)'
       console.log('Getting Category ID')
-      console.log(date)
+      var email = this.email
       connection.query(query, [this.user_id, this.data.category_id, this.data.amount, date], (function (data) {
         return function (err, rows) {
           if (err) {
@@ -78,8 +80,11 @@ var storage = (function () {
 
           if (data.amount < 0)
             speechOutput = 'The amount was deducted from your expenses'
-
-          response.tell(speechOutput)
+          if (!email) {
+            response.tellWithLinkCard(speechOutput)
+          } else {
+            response.tell(speechOutput)
+          }
         }
       })(this.data))
     }
@@ -89,10 +94,9 @@ var storage = (function () {
     /**
      * Collects category_id and calls save()
      */
-    saveExpense: function (user_id, data, response) {
+    saveExpense: function (user_id, email, data, response) {
       var currentExpense
       var query = 'SELECT category_id FROM category WHERE category_name = ?'
-
       connection.query(query, [data.category], function (err, rows) {
         if (err) {
           console.log(err)
@@ -117,7 +121,7 @@ var storage = (function () {
             if (((parseFloat(monthlyExpense) + parseFloat(data.amount)) > monthlyBudget) && monthlyBudget != -1) {
               speechOutput += 'Oops! Looks like you overspent this month.'
               console.log('Checking whether overall budget is exceeded...')
-              currentExpense = new Expense(user_id, data)
+              currentExpense = new Expense(user_id, email, data)
               currentExpense.save(speechOutput, response)
             }else {
               storage.getExpenseByCategory(user_id, data.category, date, function (categoryExpense) {
@@ -126,7 +130,8 @@ var storage = (function () {
                     speechOutput += 'Oops! Looks like you overspent' + ' on ' + data.category + ' this month.'
 
                   console.log('Checking whether category-wise budget is exceeded...')
-                  currentExpense = new Expense(user_id, data)
+                  console.log('email' + email)
+                  currentExpense = new Expense(user_id, email, data)
                   currentExpense.save(speechOutput, response)
                 })
               })
@@ -136,16 +141,21 @@ var storage = (function () {
       })
     },
     addUser: function (user_id, email, callback) {
-      var query = 'SELECT * FROM user WHERE ( user_id = ?)'
-      connection.query(query, [user_id], function (err, rows1) {
-        if (err) {
-          console.log(err)
-          return
-        }
-        console.log(rows1)
-        if (rows1.length == 0) {
-          query = 'INSERT INTO user(email_id, user_id) VALUES (?,?)'
-
+      if (email == undefined) {
+        callback()
+      } else {
+        var query = 'SELECT * FROM user WHERE ( user_id = ?)'
+        connection.query(query, [user_id], function (err, rows1) {
+          if (err) {
+            console.log(err)
+            return
+          }
+          console.log(rows1)
+          if (rows1.length == 0) {
+            query = 'INSERT INTO user(email_id, user_id) VALUES (?,?)'
+          }else {
+            query = 'UPDATE user SET email_id = ? WHERE user_id = ?'
+          }
           connection.query(query, [email, user_id], function (err, rows2) {
             if (err) {
               console.log(err)
@@ -153,8 +163,8 @@ var storage = (function () {
             }
             callback()
           })
-        }
-      })
+        })
+      }
     },
     /**
      * Sets overall budget for the month specified in data.date
