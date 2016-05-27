@@ -41,6 +41,7 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
   intentHandlers.AddExpenseIntent = function (intent, session, response) {
     var userId = session.user.userId
     var data = {}
+    var email = session.user.accessToken
     if (session.new === true) {
       data.category = intent.slots.category.value
       data.date = intent.slots.date.value
@@ -58,7 +59,9 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
       response.ask(speechOutput, repromptText)
       return
     } else {
-      storage.saveExpense(userId, data, response)
+      storage.addUser(userId, email, function () {
+        storage.saveExpense(userId, email, data, response)
+      })
     }
   }
 
@@ -121,6 +124,7 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
   intentHandlers.CancelExpenditureIntent = function (intent, session, response) {
     var userId = session.user.userId
     var data = {}
+    var email = session.user.accessToken
     if (session.new === true) {
       data.category = intent.slots.category.value
       data.date = intent.slots.date.value
@@ -140,7 +144,9 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     } else {
       data.amount = parseInt(data.amount, 10)
       data.amount *= -1
-      storage.saveExpense(userId, data, response)
+      storage.addUser(userId, email, function () {
+        storage.saveExpense(userId, email, data, response)
+      })
     }
   }
 

@@ -39,7 +39,7 @@ Date.prototype.mm = function () {
 }
 
 var storage = (function () {
-  function Expense (userId, data) {
+  function Expense (userId, email, data) {
     if (data) {
       this.data = data
     } else {
@@ -50,6 +50,7 @@ var storage = (function () {
       }
     }
     this.userId = userId
+    this.email = email
   }
 
   Expense.prototype = {
@@ -66,7 +67,7 @@ var storage = (function () {
 
       var query = 'INSERT INTO expenses(user_id,category_id, amount, date) VALUES (?,?,?,?)'
       console.log('Getting Category ID')
-      console.log(date)
+      var email = this.email
       connection.query(query, [this.userId, this.data.category_id, this.data.amount, date], (function (data) {
         return function (err, rows) {
           if (err) {
@@ -80,7 +81,11 @@ var storage = (function () {
             speechOutput = 'The amount was deducted from your expenses'
           }
 
-          response.tell(speechOutput)
+          if (!email) {
+            response.tellWithLinkCard(speechOutput)
+          } else {
+            response.tell(speechOutput)
+          }
         }
       })(this.data))
     }
@@ -90,7 +95,7 @@ var storage = (function () {
     /**
      * Collects category_id and calls save()
      */
-    saveExpense: function (userId, data, response) {
+    saveExpense: function (userId, email, data, response) {
       var currentExpense
       var query = 'SELECT category_id FROM category WHERE category_name = ?'
 
@@ -118,7 +123,7 @@ var storage = (function () {
             if (((parseFloat(monthlyExpense) + parseFloat(data.amount)) > monthlyBudget) && monthlyBudget !== -1) {
               speechOutput += 'Oops! Looks like you overspent this month.'
               console.log('Checking whether overall budget is exceeded...')
-              currentExpense = new Expense(userId, data)
+              currentExpense = new Expense(userId, email, data)
               currentExpense.save(speechOutput, response)
             } else {
               storage.getExpenseByCategory(userId, data.category, date, function (categoryExpense) {
@@ -128,7 +133,7 @@ var storage = (function () {
                   }
 
                   console.log('Checking whether category-wise budget is exceeded...')
-                  currentExpense = new Expense(userId, data)
+                  currentExpense = new Expense(userId, email, data)
                   currentExpense.save(speechOutput, response)
                 })
               })
@@ -136,6 +141,36 @@ var storage = (function () {
           })
         })
       })
+    },
+
+    /**
+     *  Add user details to db
+     */
+    addUser: function (userId, email, callback) {
+      if (email === undefined) {
+        callback()
+      } else {
+        var query = 'SELECT * FROM user WHERE ( user_id = ?)'
+        connection.query(query, [userId], function (err, rows1) {
+          if (err) {
+            console.log(err)
+            return
+          }
+          console.log(rows1)
+          if (rows1.length === 0) {
+            query = 'INSERT INTO user(email_id, user_id) VALUES (?,?)'
+          } else {
+            query = 'UPDATE user SET email_id = ? WHERE user_id = ?'
+          }
+          connection.query(query, [email, userId], function (err, rows2) {
+            if (err) {
+              console.log(err)
+              return
+            }
+            callback()
+          })
+        })
+      }
     },
     /**
      * Sets overall budget for the month specified in data.date
@@ -293,7 +328,7 @@ var storage = (function () {
     },
 
     /**
-     * Returns the categories in which budget has been exceeded 
+     * Returns the categories in which budget has been exceeded
      */
 
     overSpentCategory: function (userId, date, response) {
