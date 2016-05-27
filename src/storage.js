@@ -135,6 +135,27 @@ var storage = (function () {
         })
       })
     },
+    addUser: function (user_id, email, callback) {
+      var query = 'SELECT * FROM user WHERE ( user_id = ?)'
+      connection.query(query, [user_id], function (err, rows1) {
+        if (err) {
+          console.log(err)
+          return
+        }
+        console.log(rows1)
+        if (rows1.length == 0) {
+          query = 'INSERT INTO user(email_id, user_id) VALUES (?,?)'
+
+          connection.query(query, [email, user_id], function (err, rows2) {
+            if (err) {
+              console.log(err)
+              return
+            }
+            callback()
+          })
+        }
+      })
+    },
     /**
      * Sets overall budget for the month specified in data.date
      */
