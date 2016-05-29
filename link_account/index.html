@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Expense Diary - Register</title>
+
+  <link rel='stylesheet' href='http://codepen.io/assets/libs/fullpage/jquery-ui.css'>
+
+    <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+      <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+
+      <script>
+        $(function(){
+          $("#submit").click(function(){
+
+                //assigned by Amazon
+                var vendorId = "M1QT7T5RZRHPWE";
+                var returnUrl = "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=" + vendorId;
+
+                //get the query string values amazon passed to us
+                var amazonValues = getQueryParameters();
+
+                //hacking the OAuth protocol to store tickle victims'
+                //names as the access token?!?
+                //no need for databases or passwords?!? how sneaky and
+                //mischievous! so like the Tickle Monster. 
+                var email = $('#email').val();
+                
+                //redirect the user back to Amazon 
+                //so we can store their choices for use with the skill.
+                //see description of implicit grant flow here: 
+                //https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/linking-an-alexa-user-with-a-user-in-your-system
+                if (!email) {
+                  alert('Please provide a valid Email ID');
+                } else {
+                location = returnUrl 
+                            + "#state=" 
+                            + amazonValues.state 
+                            //the hack part
+                            + "&access_token=" 
+                            + email 
+                            + "&token_type=Bearer";
+                      }
+              }
+          );
+
+
+          //credit: https://css-tricks.com/snippets/jquery/get-query-params-object/
+          function getQueryParameters(str) {
+            return (str || document.location.search).replace(/(^\?)/,'').split("&").map(function(n){return n = n.split("="),this[n[0]] = n[1],this}.bind({}))[0];
+          }
+        })
+      </script>
+</head>
+
+<body>
+
+  <div class="login-card">
+    <h1>Please Provide Email ID</h1><br>
+    <input type="text" name="email" id="email" placeholder="Email">
+    <input type="submit" name="login" id="submit" class="login login-submit" value="Submit">
+
+</div>
+
+<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+
+  <script src='http://codepen.io/assets/libs/fullpage/jquery_and_jqueryui.js'></script>
+
+</body>
+
+</html>
