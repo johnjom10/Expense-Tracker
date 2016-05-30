@@ -2,10 +2,49 @@
 var fs = require('fs')
 var pie = require('./pie')
 
-var categories = ['one', 'two', 'three', 'four']
-var percentage = [20, 50, 29, 1]
-
-pie.pieChart(categories, percentage, function (svg) {
+var data = [
+  {
+    'category': 'Bills ',
+    'percentage': 1
+  },
+  {
+    'category': 'Groceries',
+    'percentage': 10
+  },
+  {
+    'category': 'Travel',
+    'percentage': 39
+  },
+  {
+    'category': 'Food & Drinks',
+    'percentage': 20
+  },
+  {
+    'category': 'Miscellaneous',
+    'percentage': 5
+  },
+  {
+    'category': 'Investments',
+    'percentage': 5
+  },
+  {
+    'category': 'Health',
+    'percentage': 5
+  },
+  {
+    'category': 'Shopping',
+    'percentage': 5
+  },
+  {
+    'category': 'Entertainment',
+    'percentage': 5
+  },
+  {
+    'category': 'Fuel',
+    'percentage': 5
+  }
+]
+pie.pieChart(data, function (svg) {
   fs.writeFile('charts/out.svg', svg, function (err) {
     if (err) {
       console.log('error saving document', err)
