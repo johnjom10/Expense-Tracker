@@ -5,7 +5,7 @@ var pie = require('./bar')
 var data = [
   {
     'category': 'Bills ',
-    'amount': 4000
+    'amount': 400
   },
   {
     'category': 'Groceries',
