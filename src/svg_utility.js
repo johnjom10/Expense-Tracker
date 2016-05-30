@@ -24,14 +24,14 @@ function lineGraphJSONObject(userId, month, year, callback){  //returns array of
 }
 
 
-function print(arrayOfObjects){  //test
+/*function print(arrayOfObjects){  //test
 	console.log(arrayOfObjects.length);
 	for(var k in arrayOfObjects){
 		console.log(arrayOfObjects[k].date+" = "+arrayOfObjects[k].Expenditure);
 	}
 }
 lineGraphJSONObject('amzn1.ask.account.AFP3ZWPOS2BGJR7OWJZ3DHPKMOMNWY4AY66FUR7ILBWANIHQN73QGJSNEHLSQOWKTMAYXZ4ASY6XJJ4IZG7DHMEVNRKFP7JT7LOKE7UQTOSJA5U3OBLOKCTNHIQ4MIEPK7VDFXXLWNTV7YMOD52U243Y7SB57ZD6IZQLRVGOF7XYYJW52QRFGZYPTXSF7GH3WNNSIH3QPQEMI7I', 5, 2016, print);
-
+*/
 
 
 
