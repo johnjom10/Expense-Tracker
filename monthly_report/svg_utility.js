@@ -11,8 +11,8 @@ var connection = mysql.createConnection({
     port     : 3306
 });
 
-function lineGraphJSONObject( month, year, callback){  //returns array of objects in the form {date, Expenditure}
-	var query = 'SELECT user_id, DAY(date) AS date, SUM(amount) AS Expenditure FROM expenses WHERE MONTH(date) = ? AND YEAR(date) = ? GROUP BY DAY(date), user_id';
+function lineGraphObject(month, year, callback){  //returns array of objects in the form {date, Expenditure}
+	var query = 'SELECT user_id, DAY(date) AS date, SUM(amount) AS Expenditure FROM expenses WHERE MONTH(date) = ? AND YEAR(date) = ? GROUP BY user_id, DAY(date)';
 	connection.query(query, [month, year], function(err, expenses){
 		if(err){
 			console.log(err);
@@ -23,101 +23,52 @@ function lineGraphJSONObject( month, year, callback){  //returns array of object
 	});
 }
 
-/*
-function print(arrayOfObjects){  //test
-	console.log(arrayOfObjects.length);
-	for(var k in arrayOfObjects){
-		console.log(arrayOfObjects[k].date+" = "+arrayOfObjects[k].Expenditure+" BY "+arrayOfObjects[k].user_id);
+function jsonObject(arrayOfObjects, callback){
+	var len = arrayOfObjects.length;
+	var jsonObj = [];  								// the final json Object
+	var userData = [];							    // to store the data of a single user
+	for(var k = 0;k<len; k++){
+		var data = {};								// store the date and the total expenditure for a day.
+		data['date'] = arrayOfObjects[k].date;
+		data['total'] = arrayOfObjects[k].Expenditure;
+		userData.push(data);
+		var flag = false;
+		try{
+			if(arrayOfObjects[k+1].user_id != arrayOfObjects[k].user_id){
+				flag = true;
+			}
+			else{
+			}
+		}
+		catch(ex){
+			flag = true;
+		}
+		if(flag){
+			var userObject = {};
+			userObject['user_id'] = arrayOfObjects[k].user_id;
+			userObject['user_data'] = userData;
+			userData = [];
+			jsonObj.push(userObject);
+		}
 	}
+	callback(jsonObj);
 }
-//lineGraphJSONObject('amzn1.ask.account.AFP3ZWPOS2BGJR7OWJZ3DHPKMOMNWY4AY66FUR7ILBWANIHQN73QGJSNEHLSQOWKTMAYXZ4ASY6XJJ4IZG7DHMEVNRKFP7JT7LOKE7UQTOSJA5U3OBLOKCTNHIQ4MIEPK7VDFXXLWNTV7YMOD52U243Y7SB57ZD6IZQLRVGOF7XYYJW52QRFGZYPTXSF7GH3WNNSIH3QPQEMI7I', 5, 2016, print);
 
-
-
-lineGraphJSONObject(5, 2016, print);
-
-*/
-
-
-
-
-
+function getJSONObject(month, year, callback){     // the driver function to be called.
+	lineGraphObject(month, year, function(exp){
+		jsonObject(exp, callback);
+	});
+}
 
 
 /*
-var query = 'SELECT category_name FROM category';
-
-var total_expenditure;
-var cat_names = [];
-var percent_cat = [];
-
-/*function arrayOfCategories(){
-	console.log("In the function");
-	connection.query(query, [], function(err,result){
-		if(err){
-			console.log(err);
+function print(arrayOfObjects){ 						 //test
+	for(var k in arrayOfObjects){
+		console.log(k+" : "+arrayOfObjects[k].user_id+": ");
+		for(var j in arrayOfObjects[k]['user_data']){
+			console.log(arrayOfObjects[k].user_data[j].date+" = "+arrayOfObjects[k].user_data[j].total);
 		}
-		else{
-			console.log("After query");
-			for(var k in result){
-				cat_names.push(result[k].category_name);
-			}
-		}
-	});
-}
-
-function percents(){
-	var month = 5;
-	var year = 2016;  //default
-
-	var query = 'SELECT category_name, SUM(amount) AS cat_expense FROM category, expenses WHERE expenses.category_id = category.category_id AND MONTH(expenses.date) = ? AND YEAR(expenses.date) = ? GROUP BY category_name';
-	connection.query(query, [month, year], function(err,rows){
-		if(err){
-			console.log(err);
-		}
-		else{
-			console.log("After query");
-			for(var k in rows){
-				if(rows[k].cat_expense>0){
-					cat_names.push(rows[k].category_name);
-					percent_cat.push(rows[k].cat_expense*100/total_expenditure);
-				}
-			}
-			for(var k in percent_cat){
-				console.log(cat_names[k]+' = '+percent_cat[k]);
-			}
-		}
-	});
-}
-
-
-
-function totalExpense(){
-	var month = 5;
-	var year = 2016;  //default
-
-	var total_expense = 'SELECT SUM(amount) FROM expenses WHERE MONTH(date) = ? AND YEAR(date) = ?';
-	connection.query(total_expense, [month, year], function(error, total){
-		if(error){
-			console.log(error);
-		}
-		else{
-			total_expenditure = (total[0]['SUM(amount)']);
-		}
-	});
+	}
 }*/
 
-
-
-
-
-//arrayOfCategories();
-//totalExpense();
-//percents();
-
-//console.log("Ending Connection.");
-//connection.end();
-
-
-
-
+//getJSONObject(5, 2016, print);  // test
