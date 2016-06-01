@@ -295,8 +295,8 @@ var storage = (function () {
           return
         }
         speechOutput = 'Budget exceeded during '
-        for (var k in rows) {
-          speechOutput += ', ' + monthNames[rows[k].month - 1]
+         for (var i = 0; i < rows.length; i++) {
+          speechOutput += ', ' + monthNames[rows[i].month - 1]
         }
         response.tell(speechOutput)
       })
@@ -320,8 +320,8 @@ var storage = (function () {
           return
         }
         speechOutput = 'Budget for ' + category + ' exceeded during '
-        for (var k in rows) {
-          speechOutput += ', ' + monthNames[rows[k].month - 1]
+         for (var i = 0; i < rows.length; i++) {
+          speechOutput += ', ' + monthNames[rows[i].month - 1]
         }
         response.tell(speechOutput)
       })
@@ -346,8 +346,8 @@ var storage = (function () {
           return
         }
         speechOutput = 'Budget exceeded for'
-        for (var k in rows) {
-          speechOutput += ', ' + rows[k].category_name
+         for (var i = 0; i < rows.length; i++) {
+          speechOutput += ', ' + rows[i].category_name
         }
         response.tell(speechOutput)
       })
