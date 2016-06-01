@@ -7,14 +7,13 @@
 
     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
-
 'use strict'
-var AlexaSkill = require('./AlexaSkill')
-var eventHandlers = require('./eventHandlers')
-var intentHandlers = require('./intentHandlers')
+var AlexaSkill = require('./AlexaSkill');
+var eventHandlers = require('./eventHandlers');
+var intentHandlers = require('./intentHandlers');
 
-var APP_ID = 'amzn1.echo-sdk-ams.app.6a78e294-fb00-4ec2-9e76-f3fe7f66b2d6' // replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]"
-var skillContext = {}
+var APP_ID = 'amzn1.echo-sdk-ams.app.6a78e294-fb00-4ec2-9e76-f3fe7f66b2d6'; // replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]"
+var skillContext = {};
 
 /**
  * ExpenseTracker is a child of AlexaSkill.
@@ -25,17 +24,17 @@ var skillContext = {}
 var ExpenseTracker = function () {
   AlexaSkill.call(this, APP_ID)
   skillContext.needMoreHelp = true
-}
+};
 
 // Extend AlexaSkill
-ExpenseTracker.prototype = Object.create(AlexaSkill.prototype)
-ExpenseTracker.prototype.constructor = ExpenseTracker
+ExpenseTracker.prototype = Object.create(AlexaSkill.prototype);
+ExpenseTracker.prototype.constructor = ExpenseTracker;
 
-eventHandlers.register(ExpenseTracker.prototype.eventHandlers, skillContext)
-intentHandlers.register(ExpenseTracker.prototype.intentHandlers, skillContext)
+eventHandlers.register(ExpenseTracker.prototype.eventHandlers, skillContext);
+intentHandlers.register(ExpenseTracker.prototype.intentHandlers, skillContext);
 
 exports.handler = function (event, context) {
   // Create an instance of the ExpenseTracker skill.
   var expenseTracker = new ExpenseTracker()
   expenseTracker.execute(event, context)
-}
+};
