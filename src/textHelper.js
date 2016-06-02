@@ -15,7 +15,7 @@ var textHelper = (function () {
       ' deduct five dollars from groceries on June,' +
       ' i am confused help me,' +
       ' and exit. What do you want to do ?',
-    specifyAmount: 'How much did you spend ?',
+    specifyAmount: 'Please specify an amount .',
     setBudgetHelp: 'You can try,' +
       'Set budget for groceries as fifty dollars for this month',
 
@@ -25,6 +25,6 @@ var textHelper = (function () {
     confirmCancellation: 'Are you sure you want to erase the last entry from your diary ?',
     cancelledExpense: 'The last expense entry has been erased from your diary.',
     dontCancel: "Ok. I'm retaining the entry in your diary."
-  }
-})()
-module.exports = textHelper
+  };
+})();
+module.exports = textHelper;
