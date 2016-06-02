@@ -376,9 +376,9 @@ var storage = (function () {
           speechOutput = 'You have not overspent on  any categories .';
           response.tell(speechOutput);
         }
-        speechOutput = 'Budget exceeded for';
-        for (var k in rows) {
-          speechOutput += ', ' + rows[k].category_name;
+        speechOutput = 'Budget exceeded for'
+         for (var i = 0; i < rows.length; i++) {
+          speechOutput += ', ' + rows[i].category_name
         }
         response.tell(speechOutput);
       });
