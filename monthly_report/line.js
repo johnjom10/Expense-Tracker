@@ -1,44 +1,50 @@
+/*
+ *
+ * Module to generate line chart in svg format
+ *
+ */
 'use strict'
-var d3 = require('d3')
+var d3 = require('d3');
+var jsdom = require('jsdom');
+var strip = require('striptags');
 
-var jsdom = require('jsdom')
-var strip = require('striptags')
-
-var htmlStub = ''
+var htmlStub = '';
 
 var line = (function () {
   return {
     lineChart: function (data, callback) {
+      console.log('Line Chart for : ' + data);
       jsdom.env({
         features: { QuerySelector: true }, html: htmlStub, done: function (errors, window) {
-          var html = window.document.querySelector('html')
-
-          var margin = {top: 30, right: 20, bottom: 30, left: 50}
-          var width = 600 - margin.left - margin.right
-          var height = 270 - margin.top - margin.bottom
+          var html = window.document.querySelector('html');
+          var margin = {top: 30, right: 20, bottom: 30, left: 50};
+          var width = 600 - margin.left - margin.right;
+          var height = 270 - margin.top - margin.bottom;
 
           // Parse the date / time
-          var parseDate = d3.time.format('%Y-%m-%d').parse
+          // var parseDate = d3.time.format('%Y-%m-%d').parse
+          var parseDate = d3.time.format('%d').parse;
 
           // Set the ranges
-          var x = d3.time.scale().range([0, width])
-          var y = d3.scale.linear().range([height, 0])
+          var x = d3.time.scale().range([0, width]);
+          // var x = d3.scale.linear().range([0, width])
+          var y = d3.scale.linear().range([height, 0]);
 
           // Define the axes
           var xAxis = d3.svg.axis().scale(x)
-            .orient('bottom').ticks(5)
+            .orient('bottom').ticks(5);
 
           var yAxis = d3.svg.axis().scale(y)
-            .orient('left').ticks(5)
+            .orient('left').ticks(5);
 
           // Define the line
           var valueline = d3.svg.line()
             .x(function (d) {
-              return x(d.date)
+              return x(d.date);
             })
             .y(function (d) {
-              return y(d.amount)
-            })
+              return y(d.amount);
+            });
 
           // Adds the svg canvas
           var svg = d3.select(html)
@@ -49,19 +55,19 @@ var line = (function () {
             .attr('xmlns', 'http://www.w3.org/2000/svg')
             .append('g')
             .attr('transform',
-              'translate(' + margin.left + ',' + margin.top + ')')
+              'translate(' + margin.left + ',' + margin.top + ')');
 
           data.forEach(function (d) {
-            d.date = parseDate(d.date)
-            d.amount = +d.amount
-          })
+            d.date = parseDate(d.date);
+            d.amount = +d.amount;
+          });
           // Scale the range of the data
           x.domain(d3.extent(data, function (d) {
-            return d.date
-          }))
+            return d.date;
+          }));
           y.domain([0, d3.max(data, function (d) {
-            return d.amount
-          })])
+            return d.amount;
+          })]);
 
           // Add the valueline path.
           svg.append('path')
@@ -69,7 +75,7 @@ var line = (function () {
             .attr('d', valueline(data))
             .attr('stroke', 'steelblue')
             .attr('fill', 'none')
-            .attr('stroke-width', 2)
+            .attr('stroke-width', 2);
           // Add the X Axis
           svg.append('g')
             .attr('class', 'x axis')
@@ -78,7 +84,7 @@ var line = (function () {
             .attr('fill', 'none')
             .attr('stroke-width', 1)
             .attr('shape-rendering', 'crispEdges')
-            .call(xAxis)
+            .call(xAxis);
 
           // Add the Y Axis
           svg.append('g')
@@ -87,14 +93,15 @@ var line = (function () {
             .attr('fill', 'none')
             .attr('stroke-width', 1)
             .attr('shape-rendering', 'crispEdges')
-            .call(yAxis)
-          var svgsrc = window.document.documentElement.innerHTML
-          var svgStripped = strip(svgsrc, '<svg><path><text><g><rect><line>')
-          callback(svgStripped)
+            .call(yAxis);
+
+          var svgsrc = window.document.documentElement.innerHTML;
+          var svgStripped = strip(svgsrc, '<svg><path><text><g><rect><line>');
+          callback(svgStripped);
         } // end jsDom done callback
-      })
+      });
     }
 
   }
-})()
-module.exports = line
+})();
+module.exports = line;
