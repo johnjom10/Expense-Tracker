@@ -25,7 +25,7 @@ app.get('/', function (req, res) {
 app.post('/', function (req, res) {
   var today = new Date();
   if (req.query.caller === 'iftttmaker') {
-    if (today.getDate() === 2) {
+    if (today.getDate() === 1) {
       async.parallel([
         function (callback) {
           csv.csvGeneration();
