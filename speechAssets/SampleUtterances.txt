@@ -67,17 +67,14 @@ CancelExpenditureIntent deduct {amount} dollars from {category} on {date}
 CancelExpenditureIntent deduct {amount} dollars from {category}
 CancelExpenditureIntent deduct {amount} dollars on {date}
 CancelExpenditureIntent deduct {amount} dollars
-CancelExpenditureIntent deduct
 CancelExpenditureIntent cancel entry for {amount} dollars from {category} on {date}
 CancelExpenditureIntent cancel entry for {amount} dollars from {category}
 CancelExpenditureIntent cancel entry for {amount} dollars on {date}
 CancelExpenditureIntent cancel entry for {amount} dollars
-CancelExpenditureIntent cancel
 CancelExpenditureIntent remove entry for {amount} dollars from {category} on {date}
 CancelExpenditureIntent remove entry for {amount} dollars from {category}
 CancelExpenditureIntent remove entry for {amount} dollars on {date}
 CancelExpenditureIntent remove entry for {amount} dollars
-CancelExpenditureIntent remove
 CancelExpenditureIntent remove {amount} from {category} on {date}
 CancelExpenditureIntent remove {amount} from {category}
 CancelExpenditureIntent remove {amount}
@@ -85,7 +82,6 @@ CancelExpenditureIntent delete entry for {amount} dollars from {category} on {da
 CancelExpenditureIntent delete entry for {amount} dollars from {category}
 CancelExpenditureIntent delete entry for {amount} dollars on {date}
 CancelExpenditureIntent delete entry for {amount} dollars
-CancelExpenditureIntent delete
 CancelExpenditureIntent annull entry for {category} on {date}
 CancelExpenditureIntent annull entry of {amount} for {category} on {date}
 CancelExpenditureIntent eliminate entry of {amount} for {category} on {date}
@@ -144,6 +140,9 @@ GiveSpendingHabitsIntent how much did i spend on {category} {date}
 GiveSpendingHabitsIntent how much did i spend on {date}
 GiveSpendingHabitsIntent how much do I have left {category}
 GiveSpendingHabitsIntent how much do I have left
+GiveSpendingHabitsIntent whats my budget for {date} for {category}
+GiveSpendingHabitsIntent whats my budget for {date}
+GiveSpendingHabitsIntent whats my budget
 
 ListAllCategoriesIntent list all available categories
 ListAllCategoriesIntent list all categories

@@ -12,7 +12,7 @@ var AlexaSkill = require('./AlexaSkill');
 var eventHandlers = require('./eventHandlers');
 var intentHandlers = require('./intentHandlers');
 
-var APP_ID = 'amzn1.echo-sdk-ams.app.6a78e294-fb00-4ec2-9e76-f3fe7f66b2d6'; // replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]"
+var APP_ID = 'amzn1.echo-sdk-ams.app.c89d5a3e-987e-4772-9b47-9257ebd0a4f7'; // replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]"
 var skillContext = {};
 
 /**
@@ -22,8 +22,8 @@ var skillContext = {};
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
  */
 var ExpenseTracker = function () {
-  AlexaSkill.call(this, APP_ID)
-  skillContext.needMoreHelp = true
+  AlexaSkill.call(this, APP_ID);
+  skillContext.needMoreHelp = true;
 };
 
 // Extend AlexaSkill
@@ -35,6 +35,6 @@ intentHandlers.register(ExpenseTracker.prototype.intentHandlers, skillContext);
 
 exports.handler = function (event, context) {
   // Create an instance of the ExpenseTracker skill.
-  var expenseTracker = new ExpenseTracker()
-  expenseTracker.execute(event, context)
+  var expenseTracker = new ExpenseTracker();
+  expenseTracker.execute(event, context);
 };

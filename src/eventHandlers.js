@@ -9,27 +9,27 @@
 */
 
 'use strict'
-var textHelper = require('textHelper');
+var textHelper = require('textHelper')
 
 var registerEventHandlers = function (eventHandlers, skillContext) {
   eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
     // if user said a one shot command that triggered an intent event,
     // it will start a new session, and then we should avoid speaking too many words.
-    skillContext.needMoreHelp = false;
-  };
+    skillContext.needMoreHelp = false
+  }
 
   eventHandlers.onLaunch = function (launchRequest, session, response) {
     // Speak welcome message and ask user questions
     // based on whether there are players or not.
-    console.log('Expense Tracker Launched');
-    var speechText = 'Welcome to Expense Tracker. Opening your diary. What expense do you want to add to the diary ?';
-    var repromptText = textHelper.helpText + 'What do you want to do ?';
-    response.ask(speechText, repromptText);
-  };
+    console.log('Expense Tracker Launched')
+    var speechText = 'Welcome to Expense Tracker. Opening your diary.'
+    var repromptText = textHelper.helpText + 'What do you want to do ?'
+    response.ask(speechText, repromptText)
+  }
 
   eventHandlers.onSessionEnded = function (sessionEndedRequest, session) {
-    console.log('ExpenseTracker onSessionEnded requestId: ' + sessionEndedRequest.requestId + ', sessionId: ' + session.sessionId);
+    console.log('ExpenseTracker onSessionEnded requestId: ' + sessionEndedRequest.requestId + ', sessionId: ' + session.sessionId)
   // any cleanup logic goes here
-  };
-};
-exports.register = registerEventHandlers;
+  }
+}
+exports.register = registerEventHandlers
