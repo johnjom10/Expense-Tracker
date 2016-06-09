@@ -1,13 +1,13 @@
+from sklearn.linear_model import LinearRegression 
+from sklearn.ensemble import RandomForestRegressor 
+import pandas as pd
 import numpy as np
-import csv
 
-f = open('data.csv', 'r')
-parsed = csv.reader(f)
+dataFrame = pd.read_csv('data.csv') 
+dataMatrix = dataFrame.as_matrix()
+X = dataMatrix[:,1:]
+Y = dataMatrix[:,0]
 
-j=0
-print parsed.next()
-for i in parsed:
-	if(j==1):
-		break
-	print i
-	j+=1
+RF = RandomForestRegressor()
+RF.fit(X,Y)
+print(RF.predict([[0,1,2017]]))
