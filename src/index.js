@@ -7,7 +7,6 @@
 
     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
-'use strict'
 var AlexaSkill = require('./AlexaSkill');
 var eventHandlers = require('./eventHandlers');
 var intentHandlers = require('./intentHandlers');
@@ -21,9 +20,10 @@ var skillContext = {};
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
  */
-var ExpenseTracker = function () {
-  AlexaSkill.call(this, APP_ID);
-  skillContext.needMoreHelp = true;
+var ExpenseTracker = function() {
+	'use strict';
+	AlexaSkill.call(this, APP_ID);
+	skillContext.needMoreHelp = true;
 };
 
 // Extend AlexaSkill
@@ -33,8 +33,9 @@ ExpenseTracker.prototype.constructor = ExpenseTracker;
 eventHandlers.register(ExpenseTracker.prototype.eventHandlers, skillContext);
 intentHandlers.register(ExpenseTracker.prototype.intentHandlers, skillContext);
 
-exports.handler = function (event, context) {
-  // Create an instance of the ExpenseTracker skill.
-  var expenseTracker = new ExpenseTracker();
-  expenseTracker.execute(event, context);
+exports.handler = function(event, context) {
+	'use strict';
+	// Create an instance of the ExpenseTracker skill.
+	var expenseTracker = new ExpenseTracker();
+	expenseTracker.execute(event, context);
 };

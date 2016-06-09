@@ -1,5 +1,5 @@
-'use strict'
-var textHelper = (function () {
+var textHelper = (function() {
+  'use strict';
   return {
     helpText: 'You can add your expenses,' +
       ' set overall and category-wise budgets for a month,' +
