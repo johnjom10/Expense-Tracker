@@ -1,5 +1,5 @@
-'use strict'
-var textHelper = (function () {
+var textHelper = (function() {
+  'use strict';
   return {
     helpText: 'You can add your expenses,' +
       ' set overall and category-wise budgets for a month,' +
@@ -15,6 +15,16 @@ var textHelper = (function () {
       ' deduct five dollars from groceries on June,' +
       ' i am confused help me,' +
       ' and exit. What do you want to do ?',
+    examplesTextCard: "Here's some things you can try," +
+      ' \nSpent fifty dollars on groceries today' +
+      ' \nSet budget for shopping as two hundred dollars for this month ' +
+      ' \nHow much did i spend on travel last month' +
+      ' \nList all available categories' +
+      ' \nList the expenses of today' +
+      ' \nStrike that' +
+      ' \nDeduct five dollars from groceries on June' +
+      ' \nI am confused help me' +
+      ' \nExit',
     specifyAmount: 'Please specify an amount .',
     setBudgetHelp: 'You can try,' +
       'Set budget for groceries as fifty dollars for this month',

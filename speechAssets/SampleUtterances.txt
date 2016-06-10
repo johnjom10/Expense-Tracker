@@ -3,9 +3,12 @@ AddExpenseIntent add {amount} dollars on {category}
 AddExpenseIntent add {amount} dollars on {date}
 AddExpenseIntent add {amount} dollars
 AddExpenseIntent add {amount}
+AddExpenseIntent add
+AddExpenseIntent add {amount} dollars  {date}
 AddExpenseIntent spent {amount} dollars on {category} on {date}
 AddExpenseIntent spent {amount} dollars on {category}
 AddExpenseIntent spent {amount} dollars on {date}
+AddExpenseIntent spent {amount} dollars  {date}
 AddExpenseIntent spent {amount} dollars
 AddExpenseIntent spent
 AddExpenseIntent bought {category} for {amount} dollars on {date}
@@ -15,28 +18,34 @@ AddExpenseIntent bought {category} worth {amount} dollars
 AddExpenseIntent bought
 AddExpenseIntent paid {amount} dollars for {category} on {date}
 AddExpenseIntent paid {amount} dollars for {category}
+AddExpenseIntent paid {amount} dollars  {date}
 AddExpenseIntent paid
 AddExpenseIntent lent {amount} dollars to {category} on {date}
 AddExpenseIntent lent {amount} dollars to {category}
+AddExpenseIntent lent {amount} dollars  {date}
 AddExpenseIntent lent
 AddExpenseIntent gave {amount} dollars for {category} on {date}
 AddExpenseIntent gave {amount} dollars for {category}
 AddExpenseIntent gave {amount} dollars to {category} on {date}
 AddExpenseIntent gave {amount} dollars to {category}
+AddExpenseIntent gave {amount} dollars  {date}
 AddExpenseIntent gave
 AddExpenseIntent transferred {amount} dollars for {category} on {date}
 AddExpenseIntent transferred {amount} dollars for {category}
 AddExpenseIntent transferred {amount} dollars to {category} on {date}
 AddExpenseIntent transferred {amount} dollars to {category}
+AddExpenseIntent transferred {amount} dollars  {date}
 AddExpenseIntent transferred
 AddExpenseIntent debited {amount} dollars for {category} on {date}
 AddExpenseIntent debited {amount} dollars for {category}
 AddExpenseIntent debited {amount} dollars to {category} on {date}
 AddExpenseIntent debited {amount} dollars to {category}
+AddExpenseIntent debited {amount} dollars  {date}
 AddExpenseIntent debited
 AddExpenseIntent invested {amount} dollars in {category} on {date}
 AddExpenseIntent invested {amount} dollars in {category}
 AddExpenseIntent invested {amount} dollars
+AddExpenseIntent invested {amount} dollars  {date}
 AddExpenseIntent invested
 AddExpenseIntent bill towards {category} for {amount} dollars on {date}
 AddExpenseIntent bill towards {category} for {amount} dollars
@@ -46,10 +55,12 @@ AddExpenseIntent {category} payment for {amount} dollars
 AddExpenseIntent lost {amount} dollars in {category} on {date}
 AddExpenseIntent lost {amount} dollars on {date}
 AddExpenseIntent lost {amount} dollars in {category}
+AddExpenseIntent lost {amount} dollars  {date}
 AddExpenseIntent lost
 AddExpenseIntent donated {amount} dollars towards {category} on {date}
 AddExpenseIntent donated {amount} dollars towards {category}
 AddExpenseIntent donated {amount} dollars
+AddExpenseIntent donated {amount} dollars  {date}
 AddExpenseIntent donated
 AddExpenseIntent {amount} dollars {category} {date}
 AddExpenseIntent {amount} dollars {category}
@@ -58,8 +69,10 @@ AddExpenseIntent {amount} dollars
 AddExpenseIntent {amount} for {category}
 AddExpenseIntent settled debt of {amount} dollars
 AddExpenseIntent settled debt of {amount} dollars on {date}
+AddExpenseIntent settled {amount} dollars  {date}
 AddExpenseIntent contributed {amount} 
 AddExpenseIntent contributed {amount} to a cause on {date}
+AddExpenseIntent contributed {amount} dollars  {date}
 
 
 
@@ -67,17 +80,14 @@ CancelExpenditureIntent deduct {amount} dollars from {category} on {date}
 CancelExpenditureIntent deduct {amount} dollars from {category}
 CancelExpenditureIntent deduct {amount} dollars on {date}
 CancelExpenditureIntent deduct {amount} dollars
-CancelExpenditureIntent deduct
 CancelExpenditureIntent cancel entry for {amount} dollars from {category} on {date}
 CancelExpenditureIntent cancel entry for {amount} dollars from {category}
 CancelExpenditureIntent cancel entry for {amount} dollars on {date}
 CancelExpenditureIntent cancel entry for {amount} dollars
-CancelExpenditureIntent cancel
 CancelExpenditureIntent remove entry for {amount} dollars from {category} on {date}
 CancelExpenditureIntent remove entry for {amount} dollars from {category}
 CancelExpenditureIntent remove entry for {amount} dollars on {date}
 CancelExpenditureIntent remove entry for {amount} dollars
-CancelExpenditureIntent remove
 CancelExpenditureIntent remove {amount} from {category} on {date}
 CancelExpenditureIntent remove {amount} from {category}
 CancelExpenditureIntent remove {amount}
@@ -85,7 +95,6 @@ CancelExpenditureIntent delete entry for {amount} dollars from {category} on {da
 CancelExpenditureIntent delete entry for {amount} dollars from {category}
 CancelExpenditureIntent delete entry for {amount} dollars on {date}
 CancelExpenditureIntent delete entry for {amount} dollars
-CancelExpenditureIntent delete
 CancelExpenditureIntent annull entry for {category} on {date}
 CancelExpenditureIntent annull entry of {amount} for {category} on {date}
 CancelExpenditureIntent eliminate entry of {amount} for {category} on {date}
@@ -104,6 +113,7 @@ SetBudgetIntent set limit for {category} as {amount} dollars for {date}
 SetBudgetIntent set maximum limit for {category} as {amount} dollars for {date}
 SetBudgetIntent set maximum amount {category} as {amount} dollars for {date}
 SetBudgetIntent set budget as {amount} dollars
+SetBudgetIntent set budget
 SetBudgetIntent set limit as {amount} dollars
 SetBudgetIntent set maximum limit as {amount} dollars
 SetBudgetIntent set maximum amount as {amount} dollars
@@ -142,8 +152,9 @@ GiveSpendingHabitsIntent how much did i spend  {date}
 GiveSpendingHabitsIntent how much did i spend {date}
 GiveSpendingHabitsIntent how much did i spend on {category} {date}
 GiveSpendingHabitsIntent how much did i spend on {date}
-GiveSpendingHabitsIntent how much do I have left {category}
-GiveSpendingHabitsIntent how much do I have left
+GiveSpendingHabitsIntent whats my budget for {date} for {category}
+GiveSpendingHabitsIntent whats my budget for {date}
+GiveSpendingHabitsIntent whats my budget for {category} for {date}
 
 ListAllCategoriesIntent list all available categories
 ListAllCategoriesIntent list all categories
@@ -219,6 +230,14 @@ ListAllExpensesIntent give expenses
 
 AMAZON.HelpIntent i am confused
 AMAZON.HelpIntent i am confused help me
+AMAZON.HelpIntent help me
+AMAZON.HelpIntent how do i use expense tracker
+AMAZON.HelpIntent what do i do
+AMAZON.HelpIntent how to
+AMAZON.HelpIntent how to use expense tracker
+
+
+
 
 MostSpendingsCategory what did i spend the most on
 MostSpendingsCategory what did i spend the most on {date}
@@ -226,6 +245,8 @@ MostSpendingsCategory where did i spend the most
 MostSpendingsCategory where did i spend the most on {date}
 MostSpendingsCategory where did the spend the most during {date}
 MostSpendingsCategory what did i spend the most on during {date}
+MostSpendingsCategory which category did i spend the most on during {date}
+MostSpendingsCategory which category did i spend the most on 
 
 
 LeastSpendingsCategory what did i spend the least on
@@ -256,11 +277,15 @@ MostSpendingsMonth when did i spend the most
 MostSpendingsMonth when did i spend the most for {category}
 MostSpendingsMonth during what period  did i spend the most for {category}
 MostSpendingsMonth during what period did i spend the most
+MostSpendingsMonth Which month did i spend the most for {category}
+MostSpendingsMonth Which month did i spend the most
 
 LeastSpendingsMonth when did i spend the least for {category}
 LeastSpendingsMonth when did i spend the least
 LeastSpendingsMonth Which month did i spend the least for {category}
 LeastSpendingsMonth Which month did i spend the least
+LeastSpendingsMonth during what period  did i spend the least for {category}
+LeastSpendingsMonth during what period did i spend the least
 
 
 
