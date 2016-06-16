@@ -5,9 +5,9 @@ from sklearn.externals import joblib as jb
 import pandas as pd
 import numpy as np
 
-dataFrame = pd.read_csv('data.csv')
+dataFrame = pd.read_csv('data2.csv')
 dataMatrix = dataFrame.as_matrix()
-X = dataMatrix[:, 1:]
+X = dataMatrix[:, 2:]
 Y = dataMatrix[:, 0]
 X_train, X_test, Y_train, Y_test = tts(X, Y, test_size=0.4, random_state=0)
 RF = jb.load('pickles/expenseTrained.pkl')

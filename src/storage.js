@@ -188,7 +188,7 @@ var storage = (function() {
 		 * Sets overall budget for the month specified in data.date
 		 */
 
-		setOverallBudget: function(userId, data, response) {
+		setOverallBudget: function(userId, data, email, response) {
 			var date;
 			var formattedDate;
 			var query;
@@ -223,6 +223,9 @@ var storage = (function() {
 					}
 
 					speechOutput = 'Overall budget' + ' for ' + dateUtils.getmonthNames(date.getMonth()) + ' set as ' + data.amount + ' dollars.';
+					if (!email) {
+						response.tellWithLinkCard(speechOutput);
+					}
 					response.tell(speechOutput);
 				});
 			});
@@ -232,7 +235,7 @@ var storage = (function() {
 		 * Sets budget for data.category for month in data.date
 		 */
 
-		setCategoryBudget: function(userId, data, response) {
+		setCategoryBudget: function(userId, data, email, response) {
 			var date;
 			var formattedDate;
 			var query;
@@ -294,6 +297,9 @@ var storage = (function() {
 								return;
 							}
 							speechOutput = 'Budget of ' + data.category + ' for ' + dateUtils.getmonthNames(date.getMonth()) + ' set as ' + data.amount + ' dollars.';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						});
 					});
@@ -305,7 +311,7 @@ var storage = (function() {
 		 * Checks whether overall budget has been exceeded
 		 */
 
-		OverallOverSpentMonth: function(userId, date, response) {
+		OverallOverSpentMonth: function(userId, date, email, response) {
 			var query;
 			var speechOutput;
 
@@ -320,13 +326,18 @@ var storage = (function() {
 
 				if (rows.length === 0) {
 					speechOutput = 'You have not overspent this year.';
+					if (!email) {
+						response.tellWithLinkCard(speechOutput);
+					}
 					response.tell(speechOutput);
 				}
 				speechOutput = 'Budget exceeded during ';
 				for (var i = 0; i < rows.length; i++) {
 					speechOutput += ', ' + dateUtils.getmonthNames(rows[i].month - 1);
 				}
-
+				if (!email) {
+					response.tellWithLinkCard(speechOutput);
+				}
 				response.tell(speechOutput);
 			});
 		},
@@ -335,7 +346,7 @@ var storage = (function() {
 		 * Checks whether category budget has been exceeded
 		 */
 
-		CategoryOverSpentMonth: function(userId, category, date, response) {
+		CategoryOverSpentMonth: function(userId, category, date, email, response) {
 			var query;
 			var speechOutput;
 
@@ -350,11 +361,17 @@ var storage = (function() {
 				}
 				if (rows.length === 0) {
 					speechOutput = 'You have not overspent on ' + category + ' this year.';
+					if (!email) {
+						response.tellWithLinkCard(speechOutput);
+					}
 					response.tell(speechOutput);
 				}
 				speechOutput = 'Budget for ' + category + ' exceeded during ';
 				for (var i = 0; i < rows.length; i++) {
 					speechOutput += ', ' + date.Utils.getmonthNames(rows[k].month - 1);
+				}
+				if (!email) {
+					response.tellWithLinkCard(speechOutput);
 				}
 				response.tell(speechOutput);
 			});
@@ -364,7 +381,7 @@ var storage = (function() {
 		 * return;s the categories in which budget has been exceeded
 		 */
 
-		overSpentCategory: function(userId, date, response) {
+		overSpentCategory: function(userId, date, email, response) {
 			var speechOutput;
 			var mm = dateUtils.mm(date);
 			var queryString = 'SELECT category_name FROM (SELECT SUM(expenses.amount) as sum, category.category_name , category_budget.amount FROM expenses, category, category_budget WHERE expenses.category_id = category.category_id AND category_budget.category_id = category.category_id AND expenses.user_id = category_budget.user_id AND expenses.user_id = ? AND MONTH(expenses.date) = ? AND MONTH(category_budget.month) = ? AND YEAR(expenses.date) = ?  GROUP BY expenses.category_id) AS result where sum > result.amount';
@@ -378,11 +395,17 @@ var storage = (function() {
 				}
 				if (rows.length === 0) {
 					speechOutput = 'You have not overspent on  any categories .';
+					if (!email) {
+						response.tellWithLinkCard(speechOutput);
+					}
 					response.tell(speechOutput);
 				}
 				speechOutput = 'Budget exceeded for';
 				for (var k in rows) {
 					speechOutput += ', ' + rows[k].category_name;
+				}
+				if (!email) {
+					response.tellWithLinkCard(speechOutput);
 				}
 				response.tell(speechOutput);
 			});
@@ -624,7 +647,7 @@ var storage = (function() {
 		 * Identifies Which category the user spent the most on.
 		 */
 
-		spentMostOn: function(userId, data, response) {
+		spentMostOn: function(userId, data, email, response) {
 			var query;
 			var speechOutput;
 			var date = data.date;
@@ -644,6 +667,9 @@ var storage = (function() {
 				} else {
 					if (rows.length === 0) {
 						speechOutput = 'You Have no Expenses added.Please Make an entry when you please.';
+						if (!email) {
+							response.tellWithLinkCard(speechOutput);
+						}
 						response.tell(speechOutput);
 					} else {
 						for (var i = 0; i < rows.length; i++) {
@@ -654,6 +680,9 @@ var storage = (function() {
 						}
 
 						speechOutput = 'You spent most on  ' + data.mostcategory + ' for an amount of  ' + data.mostvalue + ' dollars .';
+						if (!email) {
+							response.tellWithLinkCard(speechOutput);
+						}
 						response.tell(speechOutput);
 					}
 				}
@@ -664,7 +693,7 @@ var storage = (function() {
 		 * Identifies Which category the user spent the least on.
 		 */
 
-		spentLeastOn: function(userId, data, response) {
+		spentLeastOn: function(userId, data, email, response) {
 			var query;
 			var speechOutput;
 			var date = data.date;
@@ -684,6 +713,9 @@ var storage = (function() {
 				} else {
 					if (rows.length === 0) {
 						speechOutput = 'You Have no Expenses added.Please Make an entry when you please.';
+						if (!email) {
+							response.tellWithLinkCard(speechOutput);
+						}
 						response.tell(speechOutput);
 					} else {
 						data.leastvalue = rows[0]['SUM(amount)'];
@@ -696,6 +728,9 @@ var storage = (function() {
 						}
 
 						speechOutput = 'You spent least on  ' + data.leastcategory + ' for an amount of  ' + data.leastvalue + ' dollars .';
+						if (!email) {
+							response.tellWithLinkCard(speechOutput);
+						}
 						response.tell(speechOutput);
 					}
 				}
@@ -706,7 +741,7 @@ var storage = (function() {
 		 * Identifies which month the user spent the most on.
 		 */
 
-		mostSpentMonth: function(userId, data, response) {
+		mostSpentMonth: function(userId, data, email, response) {
 			var query;
 			var speechOutput;
 
@@ -721,9 +756,15 @@ var storage = (function() {
 					} else {
 						if (!rows[0]) {
 							speechOutput = 'You have not spend anything so far for ' + data.category + ' this year .';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						} else {
 							speechOutput = 'You have spent the most during ' + dateUtils.getmonthNames(rows[0].monthid - 1) + ' for an amount of ' + rows[0].max + ' dollars .';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						}
 					}
@@ -736,9 +777,15 @@ var storage = (function() {
 					} else {
 						if (!rows[0]) {
 							speechOutput = 'You have not spend anything so far this year';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						} else {
 							speechOutput = 'You have spent the most during ' + dateUtils.getmonthNames(rows[0].monthid - 1) + ' for an amount of ' + rows[0].max + ' dollars .';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						}
 					}
@@ -750,7 +797,7 @@ var storage = (function() {
 		 * Identifies which month the user spent the least on.
 		 */
 
-		leastSpentMonth: function(userId, data, response) {
+		leastSpentMonth: function(userId, data, email, response) {
 			var query;
 			var speechOutput;
 
@@ -765,9 +812,15 @@ var storage = (function() {
 					} else {
 						if (!rows[0]) {
 							speechOutput = 'You have not spend anything so far for ' + data.category + ' this year .';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						} else {
 							speechOutput = 'You have spent the least on ' + data.category + ' during ' + dateUtils.getmonthNames(rows[0].monthid - 1) + ' for an amount of ' + rows[0].min + ' dollars . ';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						}
 					}
@@ -780,9 +833,15 @@ var storage = (function() {
 					} else {
 						if (!rows[0]) {
 							speechOutput = 'You have not spend anything so far this year';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						} else {
 							speechOutput = 'You have spent the least during ' + dateUtils.getmonthNames(rows[0].monthid - 1) + ' for an amount of ' + rows[0].min + ' dollars';
+							if (!email) {
+								response.tellWithLinkCard(speechOutput);
+							}
 							response.tell(speechOutput);
 						}
 					}

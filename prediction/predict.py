@@ -5,6 +5,6 @@ from sklearn.externals import joblib as jb
 import pandas as pd
 import numpy as np
 
-data = [[5, 6, 2020]]
+data = [[12, 2048]]
 RF = jb.load('pickles/expenseTrained.pkl')
 print('Predicted Expense : ' + str(RF.predict(data)))

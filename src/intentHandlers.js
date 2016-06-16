@@ -57,6 +57,7 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 		var userId = session.user.userId;
 		var data = {};
 		var date = intent.slots.date.value;
+		var email = session.user.accessToken;
 		var speechOutput;
 		var speechText;
 		var expense;
@@ -88,7 +89,7 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 										speechText += 'Your budget is ' + budget + ' dollars.';
 									}
 								}
-								buildSSMLOutput(speechText, response);
+								buildSSMLOutput(email, speechText, response);
 							});
 					});
 			} else {
@@ -109,7 +110,7 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 										speechText += 'Your budget is ' + budget + ' dollars.';
 									}
 								}
-								buildSSMLOutput(speechText, response);
+								buildSSMLOutput(email, speechText, response);
 							});
 					});
 			}
@@ -117,13 +118,13 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 			if (!data.category) {
 				storage.getExpense(userId, data.date, function(result) {
 					speechText = 'You have spent ' + result + ' dollars on ' + '<say-as interpret-as = "date">' + dateUtils.yyyymmdddash(data.date) + ' </say-as>';
-					buildSSMLOutput(speechText, response);
+					buildSSMLOutput(email, speechText, response);
 				});
 			} else {
 				storage.getExpenseByCategoryAsync(userId, data.category, data.date)
 					.then(function(result) {
 						speechText = 'You have spent ' + result + ' dollars on ' + data.category + ' on ' + '<say-as interpret-as = "date">' + dateUtils.yyyymmdddash(data.date) + ' </say-as>';
-						buildSSMLOutput(speechText, response);
+						buildSSMLOutput(email, speechText, response);
 					});
 			}
 		}
@@ -160,6 +161,7 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 	};
 
 	intentHandlers.CancelExpenditureImmediate = function(intent, session, response) {
+		var email = session.user.accessToken;
 		session.attributes.deleteLast = true;
 		response.ask(textHelper.confirmCancellation);
 	};
@@ -178,9 +180,9 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 			response.tell(speechOutput);
 		} else {
 			if (!(data.category)) {
-				storage.setOverallBudget(userId, data, response);
+				storage.setOverallBudget(userId, data, email, response);
 			} else {
-				storage.setCategoryBudget(userId, data, response);
+				storage.setCategoryBudget(userId, data, email, response);
 			}
 		}
 	};
@@ -194,6 +196,7 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 	intentHandlers.OverspendIntent = function(intent, session, response) {
 		var userId = session.user.userId;
 		var data = {};
+		var email = session.user.accessToken;
 		var date = intent.slots.date.value;
 		var speechOutput;
 
@@ -210,15 +213,24 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 				.then(function(result) {
 					if (result === -1) {
 						speechOutput = 'You have not set a budget for this month';
+						if (!email) {
+							response.tellWithLinkCard(speechOutput);
+						}
 						response.tell(speechOutput);
 					} else {
 						return storage.getTotalExpenseByMonthAsync(userId, data.date)
 							.then(function(exp) {
 								if (parseFloat(exp) > parseFloat(result)) {
 									speechOutput = 'You have exceeded your budget for this month by ' + (parseFloat(exp) - parseFloat(result)) + ' dollars.';
+									if (!email) {
+										response.tellWithLinkCard(speechOutput);
+									}
 									response.tell(speechOutput);
 								} else {
 									speechOutput = 'You have not exceeded your budget for this month.';
+									if (!email) {
+										response.tellWithLinkCard(speechOutput);
+									}
 									response.tell(speechOutput);
 								}
 							})
@@ -233,15 +245,24 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 				.then(function(result) {
 					if (result === -1) {
 						speechOutput = 'You have not set a budget for this category';
+						if (!email) {
+							response.tellWithLinkCard(speechOutput);
+						}
 						response.tell(speechOutput);
 					} else {
 						return storage.getExpenseByCategoryAsync(userId, data.category, data.date)
 							.then(function(exp) {
 								if (parseFloat(exp) > parseFloat(result)) {
 									speechOutput = 'You have exceeded your  budget for ' + data.category + ' for this month.';
+									if (!email) {
+										response.tellWithLinkCard(speechOutput);
+									}
 									response.tell(speechOutput);
 								} else {
 									speechOutput = 'You have not exceeded your budget for ' + data.category + ' for this month.';
+									if (!email) {
+										response.tellWithLinkCard(speechOutput);
+									}
 									response.tell(speechOutput);
 								}
 							})
@@ -257,20 +278,22 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 	intentHandlers.OverspendMonth = function(intent, session, response) {
 		var userId = session.user.userId;
 		var data = {};
+		var email = session.user.accessToken;
 		var date = new Date();
 
 		data.category = intent.slots.category.value;
 
 		if (!data.category) {
-			storage.OverallOverSpentMonth(userId, date, response);
+			storage.OverallOverSpentMonth(userId, date, email, response);
 		} else {
-			storage.CategoryOverSpentMonth(userId, data.category, date, response);
+			storage.CategoryOverSpentMonth(userId, data.category, date, email, response);
 		}
 	};
 
 	intentHandlers.OverspendCategory = function(intent, session, response) {
 		var userId = session.user.userId;
 		var data = {};
+		var email = session.user.accessToken;
 		var date = intent.slots.date.value;
 
 		if (!date) {
@@ -279,12 +302,13 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 			data.date = new Date(date);
 		}
 
-		storage.overSpentCategory(userId, data.date, response);
+		storage.overSpentCategory(userId, data.date, email, response);
 	};
 
 	intentHandlers.MostSpendingsMonth = function(intent, session, response) {
 		var userId = session.user.userId;
 		var data = {};
+		var email = session.user.accessToken;
 
 		if (!intent.slots.category.value) {
 			data.category = '';
@@ -294,12 +318,13 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 			data.date = new Date();
 		}
 
-		storage.mostSpentMonth(userId, data, response);
+		storage.mostSpentMonth(userId, data, email, response);
 	};
 
 	intentHandlers.LeastSpendingsMonth = function(intent, session, response) {
 		var userId = session.user.userId;
 		var data = {};
+		var email = session.user.accessToken;
 
 		if (!intent.slots.category.value) {
 			data.category = '';
@@ -309,11 +334,12 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 			data.date = new Date();
 		}
 
-		storage.leastSpentMonth(userId, data, response);
+		storage.leastSpentMonth(userId, data, email, response);
 	};
 	intentHandlers.MostSpendingsCategory = function(intent, session, response) {
 		var userId = session.user.userId;
 		var data = {};
+		var email = session.user.accessToken;
 
 		if (!intent.slots.date.value) {
 			data.date = new Date();
@@ -321,12 +347,13 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 			data.date = new Date(intent.slots.date.value);
 		}
 
-		storage.spentMostOn(userId, data, response);
+		storage.spentMostOn(userId, data, email, response);
 	};
 
 	intentHandlers.LeastSpendingsCategory = function(intent, session, response) {
 		var userId = session.user.userId;
 		var data = {};
+		var email = session.user.accessToken;
 
 		if (!intent.slots.date.value) {
 			data.date = new Date();
@@ -334,7 +361,7 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 			data.date = new Date(intent.slots.date.value);
 		}
 
-		storage.spentLeastOn(userId, data, response);
+		storage.spentLeastOn(userId, data, email, response);
 	};
 
 	intentHandlers['AMAZON.HelpIntent'] = function(intent, session, response) {
@@ -342,6 +369,7 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 	};
 
 	intentHandlers['AMAZON.YesIntent'] = function(intent, session, response) {
+		var email = session.user.accessToken;
 		if (session.attributes.deleteLast === true) {
 			storage.cancelLastExpense(session.user.userId, response);
 		} else {
@@ -350,7 +378,11 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 	};
 
 	intentHandlers['AMAZON.NoIntent'] = function(intent, session, response) {
+		var email = session.user.accessToken;
 		if (session.attributes.deleteLast === true) {
+			if (!email) {
+				response.tellWithLinkCard(textHelper.dontCancel);
+			}
 			response.tell(textHelper.dontCancel);
 		} else {
 			helpMe(response);
@@ -361,11 +393,14 @@ var registerIntentHandlers = function(intentHandlers, skillContext) {
 		response.tell('Goodbye. Thank you for using Expense Tracker');
 	};
 };
-var buildSSMLOutput = function(speechText, response) {
+var buildSSMLOutput = function(email, speechText, response) {
 	var speechOutput = {
 		speech: '<speak>' + speechText + '</speak>',
 		type: AlexaSkill.speechOutputType.SSML
 	};
+	if (!email) {
+		response.tellWithLinkCard(speechOutput);
+	}
 	response.tell(speechOutput);
 };
 
@@ -375,7 +410,7 @@ var helpMe = function(response) {
 	var speechOutput = textHelper.helpText + textHelper.examplesText;
 	var repromptText = 'What do you want to do ?';
 
-	response.tellWithCard(speechOutput, cardTitle, cardOutput);
+	response.askWithCard(speechOutput, repromptText, cardTitle, cardOutput);
 
 };
 

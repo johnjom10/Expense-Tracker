@@ -1,3 +1,8 @@
+AddExpenseIntent that i spent {amount} dollars on {category} on {date}
+AddExpenseIntent that i spent {amount} dollars on {category}
+AddExpenseIntent that i spent {amount} dollars on {date}
+AddExpenseIntent that i spent {amount} dollars
+AddExpenseIntent that i spent {amount}
 AddExpenseIntent add {amount} dollars on {category} on {date}
 AddExpenseIntent add {amount} dollars on {category}
 AddExpenseIntent add {amount} dollars on {date}
@@ -10,7 +15,12 @@ AddExpenseIntent spent {amount} dollars on {category}
 AddExpenseIntent spent {amount} dollars on {date}
 AddExpenseIntent spent {amount} dollars  {date}
 AddExpenseIntent spent {amount} dollars
-AddExpenseIntent spent
+AddExpenseIntent i spent {amount} dollars on {category} on {date}
+AddExpenseIntent i spent {amount} dollars on {category}
+AddExpenseIntent i spent {amount} dollars on {date}
+AddExpenseIntent i spent {amount} dollars  {date}
+AddExpenseIntent i spent {amount} dollars
+AddExpenseIntent i spent
 AddExpenseIntent bought {category} for {amount} dollars on {date}
 AddExpenseIntent bought {category} for {amount} dollars
 AddExpenseIntent bought {category} worth {amount} dollars on {date}
